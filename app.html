@@ -112,13 +112,15 @@
     <button class="navitem" data-tab="settings">Paramètres</button>
     <button class="navitem" data-tab="expenses">Dépenses</button>
     <button class="navitem" data-tab="results">Résultats</button>
+    <button class="navitem" id="logoutMenuBtn" style="margin-top:10px;">
+  🔒 Déconnexion
+</button>
     <div style="flex:1;"></div>
     <div class="muted">Astuce: change la date, choisis le lieu, “Charger depuis Supabase”, modifie, puis “Enregistrer ce lieu”.</div>
   </aside>
 
   <header>
     <button class="iconbtn" id="openDrawer">☰</button>
-    <button class="mini" id="logoutBtn">Déconnexion</button>
     <h1 id="title">Aujourd’hui</h1>
     <div class="muted" id="status"></div>
   </header>
@@ -328,7 +330,7 @@
         </div>
 
         <div style="display:flex; gap:8px; margin-top:12px; flex-wrap:wrap;">
-          <button class="btn" id="addExpenseBtn">Ajouter</button>
+          <button class="mini primary" id="addExpenseBtn">Ajouter</button>
           <button class="smallbtn" id="clearExpenseFormBtn">Vider</button>
         </div>
       </div>
@@ -392,7 +394,16 @@
   const SUPABASE_URL = "https://frbofmnvfvzrtefwhdyo.supabase.co";
   const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZyYm9mbW52ZnZ6cnRlZndoZHlvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE0MzAxNzMsImV4cCI6MjA4NzAwNjE3M30.LgDTq7ncaclByUYi3FYr6LwFBpUFIbamKixmkv2U7HU";
   const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+const logoutMenuBtn = document.getElementById("logoutMenuBtn");
 
+if (logoutMenuBtn) {
+  logoutMenuBtn.onclick = async () => {
+    if (!confirm("Se déconnecter ?")) return;
+
+    await supabase.auth.signOut();
+    window.location.href = "./index.html";
+  };
+}
   // 🔐 PROTECTION PAGE
 const { data: { session } } = await supabase.auth.getSession();
 
@@ -416,9 +427,6 @@ if (!session) {
   }
   function esc(s){ return String(s ?? "").replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"','&quot;'); }
 
-  document.getElementById("logoutBtn").onclick = async () => {
-  await supabase.auth.signOut();
-  window.location.href = "./index.html";
 };
 
   // Settings (local)
