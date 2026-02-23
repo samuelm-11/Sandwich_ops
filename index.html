@@ -112,7 +112,6 @@
     <button class="navitem" data-tab="settings">Paramètres</button>
     <button class="navitem" data-tab="expenses">Dépenses</button>
     <button class="navitem" data-tab="results">Résultats</button>
-
     <div style="flex:1;"></div>
     <div class="muted">Astuce: change la date, choisis le lieu, “Charger depuis Supabase”, modifie, puis “Enregistrer ce lieu”.</div>
   </aside>
@@ -122,6 +121,29 @@
     <h1 id="title">Aujourd’hui</h1>
     <div class="muted" id="status"></div>
   </header>
+
+  <!-- LOGIN OVERLAY -->
+  <div id="authOverlay" style="
+    position:fixed; inset:0; background:#fff; z-index:9999;
+    display:none; align-items:center; justify-content:center; padding:24px;">
+    <div style="width:100%; max-width:420px;">
+      <div style="font-weight:900; font-size:20px; margin-bottom:8px;">Sandwich Ops — Connexion</div>
+      <div class="muted" style="margin-bottom:14px;">Accès réservé (Supabase Auth).</div>
+
+      <div class="field" style="margin-bottom:10px;">
+        <div class="label">Email</div>
+        <input id="loginEmail" type="text" inputmode="email" autocomplete="username" placeholder="ton@email.com" />
+      </div>
+
+      <div class="field" style="margin-bottom:10px;">
+        <div class="label">Mot de passe</div>
+        <input id="loginPassword" type="password" autocomplete="current-password" placeholder="••••••••" />
+      </div>
+
+      <button class="cta" id="loginBtn">Se connecter</button>
+      <div class="muted" id="loginMsg" style="margin-top:10px;"></div>
+    </div>
+  </div>
 
   <main>
     <!-- TODAY -->
@@ -293,7 +315,7 @@
         <div style="font-weight:900;">Ajouter une dépense</div>
         <div class="muted">Scan facultatif (photo souche) → stocké dans Supabase Storage (bucket: receipts).</div>
 
-        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px; margin-top:10px;">
+        <div style="display:grid; grid-template-columns: 1fr 1 fr; gap:10px; margin-top:10px;">
           <label class="field">
             <div class="label">Date</div>
             <input type="date" id="expDate" />
@@ -393,6 +415,7 @@
   const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZyYm9mbW52ZnZ6cnRlZndoZHlvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE0MzAxNzMsImV4cCI6MjA4NzAwNjE3M30.LgDTq7ncaclByUYi3FYr6LwFBpUFIbamKixmkv2U7HU";
   const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
+  // Helper functions and DOM helper
   const $ = (id) => document.getElementById(id);
   const status = $("status");
 
@@ -406,7 +429,65 @@
     if (!Number.isFinite(n)) return null;
     return Math.round(n * 100);
   }
-  function esc(s){ return String(s ?? "").replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;"); }
+  function esc(s){ return String(s ?? "").replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"','&quot;'); }
+
+  // --- AUTH UI
+  const authOverlay = document.getElementById("authOverlay");
+  const loginEmail = document.getElementById("loginEmail");
+  const loginPassword = document.getElementById("loginPassword");
+  const loginBtn = document.getElementById("loginBtn");
+  const loginMsg = document.getElementById("loginMsg");
+
+  function showAuth(msg = "") {
+    if (loginMsg) loginMsg.textContent = msg || "";
+    authOverlay.style.display = "flex";
+  }
+  function hideAuth() {
+    authOverlay.style.display = "none";
+  }
+
+  async function requireAuth() {
+    const { data: { session }, error } = await supabase.auth.getSession();
+    if (error) console.warn(error);
+
+    if (!session) {
+      showAuth("");
+      return null;
+    }
+    hideAuth();
+    return session;
+  }
+
+  loginBtn?.addEventListener("click", async () => {
+    const email = (loginEmail?.value || "").trim();
+    const password = (loginPassword?.value || "").trim();
+
+    if (!email || !password) {
+      showAuth("Email et mot de passe requis.");
+      return;
+    }
+
+    loginBtn.disabled = true;
+    showAuth("Connexion…");
+
+    const { error } = await supabase.auth.signInWithPassword({ email, password });
+
+    loginBtn.disabled = false;
+
+    if (error) {
+      showAuth("Erreur: " + error.message);
+      return;
+    }
+
+    hideAuth();
+    location.reload(); // simple & efficace
+  });
+
+  async function logout() {
+    await supabase.auth.signOut();
+    location.reload();
+  }
+  window.logout = logout; // pour pouvoir appeler depuis un bouton onclick si besoin
 
   // Settings (local)
   function loadSettings() {
@@ -442,6 +523,8 @@
     withdraw: $("tab-withdraw"),
     history: $("tab-history"),
     settings: $("tab-settings"),
+    expenses: $("tab-expenses"),
+    results: $("tab-results"),
   };
 
   function goTab(tab) {
@@ -489,7 +572,6 @@
   $("expTo").value = today;
   $("resFrom").value = addDaysISO(today, -30);
   $("resTo").value = today;
-
 
   // Load refs (fresh)
   async function loadRefsFresh() {
@@ -1447,6 +1529,15 @@
   // Boot
   try {
     loadSettings();
+
+    const session = await requireAuth();
+    if (!session) {
+      // pas connecté => on ne charge pas les données
+      setStatus("Connexion requise");
+      return;
+    }
+
+    setStatus("Connecté ✅");
     await reloadAllData();
     await refreshWithdraw();
     await refreshHistory();
