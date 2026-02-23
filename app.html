@@ -1,24 +1,19 @@
 <!doctype html>
+
 <html lang="fr">
 <head>
   <meta charset="utf-8" />
-  <!-- Anti zoom iPad -->
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1, user-scalable=no" />
   <title>Sandwich Ops</title>
   <style>
     :root { --pad: 14px; --border:#eee; --text:#111; --muted:rgba(17,17,17,.7); }
     body { font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; margin:0; background:#fff; color:var(--text); }
-
-    /* iOS anti zoom/selection */
     * { -webkit-tap-highlight-color: transparent; }
     button, .btn, .pill, .navitem, .smallbtn, .mini {
-      touch-action: manipulation;
-      -webkit-user-select: none;
-      user-select: none;
+      touch-action: manipulation; -webkit-user-select: none; user-select: none;
     }
     body { -webkit-user-select:none; user-select:none; }
     input, textarea, select { -webkit-user-select:text; user-select:text; }
-
     header {
       position: sticky; top:0; background:#fff; border-bottom:1px solid var(--border);
       padding: var(--pad); z-index: 5; display:flex; align-items:center; gap:10px;
@@ -26,8 +21,6 @@
     h1 { font-size: 18px; margin:0; flex:1; }
     .muted { opacity:.7; font-size:13px; color:var(--text); }
     main { padding: var(--pad); max-width: 820px; margin: 0 auto; }
-
-    /* Drawer */
     .drawerOverlay { position:fixed; inset:0; background:rgba(0,0,0,.35); z-index:20; display:none; }
     .drawer {
       position:fixed; left:0; top:0; bottom:0; width:300px; max-width:86vw;
@@ -37,37 +30,29 @@
     }
     .drawer.open { transform: translateX(0); }
     .drawerOverlay.open { display:block; }
-
     .navtitle { font-weight:900; font-size:14px; margin-top:6px; }
     .navitem {
-      width:100%; text-align:left;
-      padding:12px 12px; border-radius:14px; border:1px solid #ddd; background:#fff;
-      font-weight:900; font-size:15px;
+      width:100%; text-align:left; padding:12px; border-radius:14px;
+      border:1px solid #ddd; background:#fff; font-weight:900; font-size:15px;
     }
     .navitem.active { background:#111; color:#fff; border-color:#111; }
-
-    .iconbtn { width:44px; height:40px; border-radius:12px; border:1px solid #ddd; background:#fff; font-size:18px; font-weight:900; }
-
-    /* UI blocks */
-    .card { padding: 12px; border:1px solid var(--border); border-radius: 14px; margin-top: 12px; }
-    .row {
-      display:flex; align-items:center; justify-content:space-between;
-      padding: 12px; border:1px solid var(--border); border-radius: 14px; margin-bottom: 10px;
-      gap:10px;
+    /* Bouton déconnexion — dans le drawer mais PAS un navitem */
+    #logoutBtn {
+      width:100%; text-align:left; padding:12px; border-radius:14px;
+      border:1px solid #fcc; background:#fff8f8; color:#c00;
+      font-weight:900; font-size:15px;
+      touch-action:manipulation; -webkit-user-select:none; user-select:none;
     }
+    .iconbtn { width:44px; height:40px; border-radius:12px; border:1px solid #ddd; background:#fff; font-size:18px; font-weight:900; }
+    .card { padding: 12px; border:1px solid var(--border); border-radius: 14px; margin-top: 12px; }
+    .row { display:flex; align-items:center; justify-content:space-between; padding: 12px; border:1px solid var(--border); border-radius: 14px; margin-bottom: 10px; gap:10px; }
     .name { font-weight: 900; }
     .sub { opacity:.7; font-size: 13px; margin-top:2px; }
     .qty { display:flex; align-items:center; gap:10px; }
-    .btn {
-      width: 46px; height: 40px; border-radius: 12px; border:1px solid #ddd; background:#fff;
-      font-size: 20px; font-weight: 900;
-    }
+    .btn { width: 46px; height: 40px; border-radius: 12px; border:1px solid #ddd; background:#fff; font-size: 20px; font-weight: 900; }
     .qnum { min-width: 34px; text-align:center; font-size: 18px; font-weight: 900; }
     .kv { display:flex; justify-content:space-between; margin-top: 6px; }
-    .cta {
-      width:100%; padding: 14px; border-radius: 14px; border:none;
-      background:#111; color:#fff; font-weight: 900; font-size: 16px; margin-top: 12px;
-    }
+    .cta { width:100%; padding: 14px; border-radius: 14px; border:none; background:#111; color:#fff; font-weight: 900; font-size: 16px; margin-top: 12px; }
     .cta:disabled { background:#888; }
     .smallbtn { padding: 10px 12px; border-radius: 12px; border:1px solid #ddd; background:#fff; font-weight:900; }
     .mini { padding: 8px 10px; border-radius: 12px; border:1px solid #ddd; background:#fff; font-weight:900; font-size:13px; }
@@ -77,25 +62,20 @@
     .pillrow { display:flex; gap:8px; flex-wrap:wrap; margin: 10px 0 12px 0; }
     .pill { padding: 10px 14px; border-radius: 999px; border:1px solid #ddd; background:#fff; font-weight:900; }
     .pill.active { background:#111; color:#fff; border-color:#111; }
-
     table { width:100%; border-collapse: collapse; margin-top: 10px; }
     th, td { border-bottom: 1px solid var(--border); padding: 10px 6px; text-align:left; font-size: 14px; vertical-align:top; }
     th { font-weight: 900; }
     tfoot td { font-weight:900; border-top: 2px solid #ddd; }
     .spacer { height:8px; }
-
     .section { display:none; }
     .section.active { display:block; }
-
     .grid2 { display:grid; grid-template-columns: 1fr 1fr; gap:10px; }
     @media (max-width: 720px){ .grid2 { grid-template-columns: 1fr; } }
-
     .badgeOff { display:inline-block; padding:4px 8px; border-radius:999px; border:1px solid #ddd; font-size:12px; opacity:.7; }
   </style>
 </head>
-
 <body>
-  <!-- Drawer -->
+
   <div class="drawerOverlay" id="drawerOverlay"></div>
   <aside class="drawer" id="drawer">
     <div style="display:flex; align-items:center; gap:10px;">
@@ -104,34 +84,40 @@
       <button class="iconbtn" id="closeDrawer">✕</button>
     </div>
 
-    <div class="navtitle">Navigation</div>
-    <button class="navitem active" data-tab="today">Aujourd’hui</button>
-    <button class="navitem" data-tab="delivery">Livraison</button>
-    <button class="navitem" data-tab="withdraw">À retirer</button>
-    <button class="navitem" data-tab="history">Historique</button>
-    <button class="navitem" data-tab="settings">Paramètres</button>
-    <button class="navitem" data-tab="expenses">Dépenses</button>
-    <button class="navitem" data-tab="results">Résultats</button>
-    <button class="navitem" id="logoutMenuBtn"> Déconnexion</button>
-    <div style="flex:1;"></div>
-    <div class="muted">Astuce: change la date, choisis le lieu, “Charger depuis Supabase”, modifie, puis “Enregistrer ce lieu”.</div>
+```
+<div class="navtitle">Navigation</div>
+<!-- Uniquement les boutons de navigation ont data-tab -->
+<button class="navitem" data-tab="today">Aujourd'hui</button>
+<button class="navitem" data-tab="delivery">Livraison</button>
+<button class="navitem" data-tab="withdraw">À retirer</button>
+<button class="navitem" data-tab="history">Historique</button>
+<button class="navitem" data-tab="settings">Paramètres</button>
+<button class="navitem" data-tab="expenses">Dépenses</button>
+<button class="navitem" data-tab="results">Résultats</button>
+
+<div style="flex:1;"></div>
+
+<!-- Déconnexion en bas du drawer, style rouge, SANS classe navitem -->
+<button id="logoutBtn">⎋ Déconnexion</button>
+
+<div class="muted">Astuce: change la date, choisis le lieu, "Charger depuis Supabase", modifie, puis "Enregistrer ce lieu".</div>
+```
+
   </aside>
 
   <header>
     <button class="iconbtn" id="openDrawer">☰</button>
-    <h1 id="title">Aujourd’hui</h1>
+    <h1 id="title">Aujourd'hui</h1>
     <div class="muted" id="status"></div>
   </header>
 
   <main>
-    <!-- TODAY -->
     <section class="section active" id="tab-today">
       <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
         <div class="muted">Jour :</div>
         <input type="date" id="dayDate" />
         <button class="smallbtn" id="todayRefresh">Rafraîchir</button>
       </div>
-
       <div class="card" style="margin-top:12px;">
         <div style="font-weight:900;">À PRODUIRE (jour sélectionné)</div>
         <div class="muted">Basé sur ce qui est enregistré dans Supabase (deliveries).</div>
@@ -141,15 +127,13 @@
         <div class="muted" style="margin-top:8px;">DLC 2 jours → Retrait à partir de J+3 (ex: fait le 18 → retirer le 21)</div>
         <div id="todayTable"></div>
       </div>
-
       <div class="card">
         <div style="font-weight:900;">Encoder rapidement</div>
         <div class="muted">Choisis un lieu → tu arrives sur Livraison (même date).</div>
         <div class="pillrow" id="quickLocPills"></div>
       </div>
-
       <div class="card">
-        <div style="font-weight:900;">À retirer aujourd’hui (résumé)</div>
+        <div style="font-weight:900;">À retirer aujourd'hui (résumé)</div>
         <div class="muted">Basé sur la vue v_delivery_remaining (Supabase).</div>
         <div class="spacer"></div>
         <div id="todayWithdrawSummary" class="muted">—</div>
@@ -158,274 +142,196 @@
       </div>
     </section>
 
-    <!-- DELIVERY -->
-    <section class="section" id="tab-delivery">
-      <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
-        <div class="muted">Jour :</div>
-        <input type="date" id="delDate" />
-        <button class="smallbtn" id="loadFromDBBtn">Charger depuis Supabase</button>
-      </div>
+```
+<section class="section" id="tab-delivery">
+  <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
+    <div class="muted">Jour :</div>
+    <input type="date" id="delDate" />
+    <button class="smallbtn" id="loadFromDBBtn">Charger depuis Supabase</button>
+  </div>
+  <div class="pillrow" id="locationPills"></div>
+  <label class="muted" style="display:flex; align-items:center; gap:10px; margin:8px 0;">
+    <input type="checkbox" id="hideZeros" checked /> Masquer les produits à 0
+  </label>
+  <div id="deliveryList"></div>
+  <div class="card">
+    <div class="kv"><div>Total pièces</div><div id="delTotalPieces" style="font-weight:900;">0</div></div>
+    <div class="kv"><div>Total €</div><div id="delTotalEur" style="font-weight:900;">0,00€</div></div>
+    <div class="muted" style="margin-top:8px;">Enregistrer ce lieu = remplace (jour + lieu) en base (anti-doublon).</div>
+  </div>
+  <button class="cta" id="saveLocationBtn">Enregistrer ce lieu</button>
+</section>
 
-      <div class="pillrow" id="locationPills"></div>
+<section class="section" id="tab-withdraw">
+  <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
+    <div class="muted">Date :</div>
+    <input type="date" id="withdrawDate" />
+    <button class="smallbtn" id="refreshWithdraw">Rafraîchir</button>
+  </div>
+  <div style="display:flex; gap:8px; margin-top:10px;">
+    <button class="smallbtn" id="btnWithdrawAll">Tout retirer</button>
+    <button class="smallbtn" id="btnWithdrawNone">Rien retirer</button>
+  </div>
+  <div id="withdrawList"></div>
+  <button class="cta" id="saveWithdrawBtn">Enregistrer les retraits</button>
+</section>
 
-      <label class="muted" style="display:flex; align-items:center; gap:10px; margin:8px 0;">
-        <input type="checkbox" id="hideZeros" checked />
-        Masquer les produits à 0
+<section class="section" id="tab-history">
+  <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
+    <div class="muted">Du :</div><input type="date" id="histFrom" />
+    <div class="muted">Au :</div><input type="date" id="histTo" />
+    <button class="smallbtn" id="refreshHist">Filtrer</button>
+  </div>
+  <div class="card">
+    <div class="kv"><div>Livré (pièces)</div><div id="histDelivered" style="font-weight:900;">0</div></div>
+    <div class="kv"><div>Retiré (pièces)</div><div id="histWithdrawn" style="font-weight:900;">0</div></div>
+    <div class="kv"><div>CA livré</div><div id="histRevenue" style="font-weight:900;">0,00€</div></div>
+  </div>
+  <div id="histList"></div>
+</section>
+
+<section class="section" id="tab-settings">
+  <div class="card">
+    <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
+      <div style="font-weight:900;">Paramètres</div>
+      <div style="flex:1;"></div>
+      <button class="mini" id="btnReloadAll">Recharger</button>
+    </div>
+    <div class="muted">Ici tu gères: DLC / J+ retrait + lieux + sandwichs (activer/désactiver, ordre, prix).</div>
+  </div>
+  <div class="card">
+    <div style="font-weight:900; margin-bottom:6px;">DLC & Retrait</div>
+    <div class="row" style="margin-bottom:0;">
+      <div><div class="name">DLC</div><div class="sub">En jours</div></div>
+      <div><input type="number" id="setDlc" value="2" style="width:110px;"></div>
+    </div>
+    <div class="row" style="margin-top:10px;">
+      <div><div class="name">Retrait à partir de</div><div class="sub">J + …</div></div>
+      <div><input type="number" id="setWithdrawJ" value="3" style="width:110px;"></div>
+    </div>
+    <button class="cta" id="saveSettings">Sauvegarder (local)</button>
+  </div>
+  <div class="grid2">
+    <div class="card">
+      <div style="font-weight:900;">Ajouter un lieu</div>
+      <div class="spacer"></div>
+      <input id="newLocName" type="text" placeholder="Nom du lieu (ex: Avia)" />
+      <div class="spacer"></div>
+      <input id="newLocSort" type="number" placeholder="Ordre (ex: 10)" />
+      <button class="cta" id="btnAddLoc">Ajouter lieu</button>
+      <div class="spacer"></div>
+      <div style="font-weight:900;">Lieux (actifs & inactifs)</div>
+      <div class="muted">Tu peux modifier nom/ordre et activer/désactiver.</div>
+      <div class="spacer"></div>
+      <div id="settingsLocList" class="muted">—</div>
+    </div>
+    <div class="card">
+      <div style="font-weight:900;">Ajouter un sandwich</div>
+      <div class="spacer"></div>
+      <input id="newProdName" type="text" placeholder="Nom (ex: Merguez)" />
+      <div class="spacer"></div>
+      <input id="newProdPrice" type="text" placeholder="Prix € (ex: 6,50)" />
+      <div class="spacer"></div>
+      <input id="newProdSort" type="number" placeholder="Ordre (ex: 10)" />
+      <button class="cta" id="btnAddProd">Ajouter sandwich</button>
+      <div class="spacer"></div>
+      <div style="font-weight:900;">Sandwichs (actifs & inactifs)</div>
+      <div class="muted">Modifier nom/prix/ordre et activer/désactiver.</div>
+      <div class="spacer"></div>
+      <div id="settingsProdList" class="muted">—</div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="tab-expenses">
+  <div class="card">
+    <div style="font-weight:900;">Ajouter une dépense</div>
+    <div class="muted">Scan facultatif (photo souche) → stocké dans Supabase Storage (bucket: receipts).</div>
+    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px; margin-top:10px;">
+      <label class="field"><div class="label">Date</div><input type="date" id="expDate" /></label>
+      <label class="field"><div class="label">Montant (€)</div><input type="text" inputmode="decimal" placeholder="ex: 12,50" id="expAmount" /></label>
+      <label class="field">
+        <div class="label">Catégorie</div>
+        <select id="expCategory">
+          <option value="Parking">Parking</option>
+          <option value="Essence">Essence</option>
+          <option value="Emballages">Emballages</option>
+          <option value="Ingrédients">Ingrédients</option>
+          <option value="Matériel">Matériel</option>
+          <option value="Divers">Divers</option>
+        </select>
       </label>
+      <label class="field"><div class="label">Note (optionnel)</div><input type="text" placeholder="ex: parking 2h / facture Metro…" id="expNote" /></label>
+      <label class="field" style="grid-column:1 / -1;"><div class="label">Scan / photo (optionnel)</div><input type="file" id="expReceipt" accept="image/*" /></label>
+    </div>
+    <div style="display:flex; gap:8px; margin-top:12px; flex-wrap:wrap;">
+      <button class="smallbtn" id="addExpenseBtn">Ajouter</button>
+      <button class="smallbtn" id="clearExpenseFormBtn">Vider</button>
+    </div>
+  </div>
+  <div class="card">
+    <div style="font-weight:900;">Journal des dépenses</div>
+    <div class="muted">Filtre par dates (par défaut : 30 derniers jours).</div>
+    <div style="display:flex; gap:8px; align-items:end; flex-wrap:wrap; margin-top:10px;">
+      <label class="field" style="min-width:160px;"><div class="label">Du</div><input type="date" id="expFrom" /></label>
+      <label class="field" style="min-width:160px;"><div class="label">Au</div><input type="date" id="expTo" /></label>
+      <button class="smallbtn" id="refreshExpenses">Rafraîchir</button>
+    </div>
+    <div class="spacer"></div>
+    <div class="kv"><div>Total période</div><div id="expTotal" style="font-weight:900;">0,00€</div></div>
+    <div id="expList" style="margin-top:10px;"></div>
+  </div>
+</section>
 
-      <div id="deliveryList"></div>
-
-      <div class="card">
-        <div class="kv"><div>Total pièces</div><div id="delTotalPieces" style="font-weight:900;">0</div></div>
-        <div class="kv"><div>Total €</div><div id="delTotalEur" style="font-weight:900;">0,00€</div></div>
-        <div class="muted" style="margin-top:8px;">
-          Enregistrer ce lieu = remplace (jour + lieu) en base (anti-doublon).
-        </div>
-      </div>
-
-      <button class="cta" id="saveLocationBtn">Enregistrer ce lieu</button>
-    </section>
-
-    <!-- WITHDRAW -->
-    <section class="section" id="tab-withdraw">
-      <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
-        <div class="muted">Date :</div>
-        <input type="date" id="withdrawDate" />
-        <button class="smallbtn" id="refreshWithdraw">Rafraîchir</button>
-      </div>
-
-      <div style="display:flex; gap:8px; margin-top:10px;">
-        <button class="smallbtn" id="btnWithdrawAll">Tout retirer</button>
-        <button class="smallbtn" id="btnWithdrawNone">Rien retirer</button>
-      </div>
-
-      <div id="withdrawList"></div>
-      <button class="cta" id="saveWithdrawBtn">Enregistrer les retraits</button>
-    </section>
-
-    <!-- HISTORY -->
-    <section class="section" id="tab-history">
-      <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
-        <div class="muted">Du :</div><input type="date" id="histFrom" />
-        <div class="muted">Au :</div><input type="date" id="histTo" />
-        <button class="smallbtn" id="refreshHist">Filtrer</button>
-      </div>
-
-      <div class="card">
-        <div class="kv"><div>Livré (pièces)</div><div id="histDelivered" style="font-weight:900;">0</div></div>
-        <div class="kv"><div>Retiré (pièces)</div><div id="histWithdrawn" style="font-weight:900;">0</div></div>
-        <div class="kv"><div>CA livré</div><div id="histRevenue" style="font-weight:900;">0,00€</div></div>
-      </div>
-
-      <div id="histList"></div>
-    </section>
-
-    <!-- SETTINGS -->
-    <section class="section" id="tab-settings">
-      <div class="card">
-        <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
-          <div style="font-weight:900;">Paramètres</div>
-          <div style="flex:1;"></div>
-          <button class="mini" id="btnReloadAll">Recharger</button>
-        </div>
-        <div class="muted">Ici tu gères: DLC / J+ retrait + lieux + sandwichs (activer/désactiver, ordre, prix).</div>
-      </div>
-
-      <div class="card">
-        <div style="font-weight:900; margin-bottom:6px;">DLC & Retrait</div>
-
-        <div class="row" style="margin-bottom:0;">
-          <div>
-            <div class="name">DLC</div>
-            <div class="sub">En jours</div>
-          </div>
-          <div><input type="number" id="setDlc" value="2" style="width:110px;"></div>
-        </div>
-
-        <div class="row" style="margin-top:10px;">
-          <div>
-            <div class="name">Retrait à partir de</div>
-            <div class="sub">J + …</div>
-          </div>
-          <div><input type="number" id="setWithdrawJ" value="3" style="width:110px;"></div>
-        </div>
-
-        <button class="cta" id="saveSettings">Sauvegarder (local)</button>
-      </div>
-
-      <div class="grid2">
-        <div class="card">
-          <div style="font-weight:900;">Ajouter un lieu</div>
-          <div class="spacer"></div>
-          <input id="newLocName" type="text" placeholder="Nom du lieu (ex: Avia)" />
-          <div class="spacer"></div>
-          <input id="newLocSort" type="number" placeholder="Ordre (ex: 10)" />
-          <button class="cta" id="btnAddLoc">Ajouter lieu</button>
-
-          <div class="spacer"></div>
-          <div style="font-weight:900;">Lieux (actifs & inactifs)</div>
-          <div class="muted">Tu peux modifier nom/ordre et activer/désactiver.</div>
-          <div class="spacer"></div>
-          <div id="settingsLocList" class="muted">—</div>
-        </div>
-
-        <div class="card">
-          <div style="font-weight:900;">Ajouter un sandwich</div>
-          <div class="spacer"></div>
-          <input id="newProdName" type="text" placeholder="Nom (ex: Merguez)" />
-          <div class="spacer"></div>
-          <input id="newProdPrice" type="text" placeholder="Prix € (ex: 6,50)" />
-          <div class="spacer"></div>
-          <input id="newProdSort" type="number" placeholder="Ordre (ex: 10)" />
-          <button class="cta" id="btnAddProd">Ajouter sandwich</button>
-
-          <div class="spacer"></div>
-          <div style="font-weight:900;">Sandwichs (actifs & inactifs)</div>
-          <div class="muted">Modifier nom/prix/ordre et activer/désactiver.</div>
-          <div class="spacer"></div>
-          <div id="settingsProdList" class="muted">—</div>
-        </div>
-      </div>
-    </section>
-
-    <section class="section" id="tab-expenses">
-      <div class="card">
-        <div style="font-weight:900;">Ajouter une dépense</div>
-        <div class="muted">Scan facultatif (photo souche) → stocké dans Supabase Storage (bucket: receipts).</div>
-
-        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px; margin-top:10px;">
-          <label class="field">
-            <div class="label">Date</div>
-            <input type="date" id="expDate" />
-          </label>
-
-          <label class="field">
-            <div class="label">Montant (€)</div>
-            <input type="text" inputmode="decimal" placeholder="ex: 12,50" id="expAmount" />
-          </label>
-
-          <label class="field">
-            <div class="label">Catégorie</div>
-            <select id="expCategory">
-              <option value="Parking">Parking</option>
-              <option value="Essence">Essence</option>
-              <option value="Emballages">Emballages</option>
-              <option value="Ingrédients">Ingrédients</option>
-              <option value="Matériel">Matériel</option>
-              <option value="Divers">Divers</option>
-            </select>
-          </label>
-
-          <label class="field">
-            <div class="label">Note (optionnel)</div>
-            <input type="text" placeholder="ex: parking 2h / facture Metro…" id="expNote" />
-          </label>
-
-          <label class="field" style="grid-column:1 / -1;">
-            <div class="label">Scan / photo (optionnel)</div>
-            <input type="file" id="expReceipt" accept="image/*" />
-          </label>
-        </div>
-
-        <div style="display:flex; gap:8px; margin-top:12px; flex-wrap:wrap;">
-          <button class="mini primary" id="addExpenseBtn">Ajouter</button>
-          <button class="smallbtn" id="clearExpenseFormBtn">Vider</button>
-        </div>
-      </div>
-
-      <div class="card">
-        <div style="font-weight:900;">Journal des dépenses</div>
-        <div class="muted">Filtre par dates (par défaut : 30 derniers jours).</div>
-
-        <div style="display:flex; gap:8px; align-items:end; flex-wrap:wrap; margin-top:10px;">
-          <label class="field" style="min-width:160px;">
-            <div class="label">Du</div>
-            <input type="date" id="expFrom" />
-          </label>
-          <label class="field" style="min-width:160px;">
-            <div class="label">Au</div>
-            <input type="date" id="expTo" />
-          </label>
-          <button class="smallbtn" id="refreshExpenses">Rafraîchir</button>
-        </div>
-
-        <div class="spacer"></div>
-        <div class="kv"><div>Total période</div><div id="expTotal" style="font-weight:900;">0,00€</div></div>
-
-        <div id="expList" style="margin-top:10px;"></div>
-      </div>
-    </section>
-
-    <section class="section" id="tab-results">
-      <div class="card">
-        <div style="font-weight:900;">Résultats (CA – Dépenses)</div>
-        <div class="muted">Basé sur deliveries (CA) et expenses (dépenses).</div>
-
-        <div style="display:flex; gap:8px; align-items:end; flex-wrap:wrap; margin-top:10px;">
-          <label class="field" style="min-width:160px;">
-            <div class="label">Du</div>
-            <input type="date" id="resFrom" />
-          </label>
-          <label class="field" style="min-width:160px;">
-            <div class="label">Au</div>
-            <input type="date" id="resTo" />
-          </label>
-          <button class="smallbtn" id="refreshResults">Calculer</button>
-        </div>
-
-        <div class="spacer"></div>
-        <div class="kv"><div>CA (livraisons)</div><div id="resCA" style="font-weight:900;">0,00€</div></div>
-        <div class="kv"><div>Dépenses</div><div id="resExp" style="font-weight:900;">0,00€</div></div>
-        <div class="kv"><div>Bénéfice net</div><div id="resNet" style="font-weight:900;">0,00€</div></div>
-
-        <div class="muted" style="margin-top:10px;" id="resPieces">—</div>
-        <div id="resByCategory" style="margin-top:10px;"></div>
-      </div>
-    </section>
+<section class="section" id="tab-results">
+  <div class="card">
+    <div style="font-weight:900;">Résultats (CA – Dépenses)</div>
+    <div class="muted">Basé sur deliveries (CA) et expenses (dépenses).</div>
+    <div style="display:flex; gap:8px; align-items:end; flex-wrap:wrap; margin-top:10px;">
+      <label class="field" style="min-width:160px;"><div class="label">Du</div><input type="date" id="resFrom" /></label>
+      <label class="field" style="min-width:160px;"><div class="label">Au</div><input type="date" id="resTo" /></label>
+      <button class="smallbtn" id="refreshResults">Calculer</button>
+    </div>
+    <div class="spacer"></div>
+    <div class="kv"><div>CA (livraisons)</div><div id="resCA" style="font-weight:900;">0,00€</div></div>
+    <div class="kv"><div>Dépenses</div><div id="resExp" style="font-weight:900;">0,00€</div></div>
+    <div class="kv"><div>Bénéfice net</div><div id="resNet" style="font-weight:900;">0,00€</div></div>
+    <div class="muted" style="margin-top:10px;" id="resPieces">—</div>
+    <div id="resByCategory" style="margin-top:10px;"></div>
+  </div>
+</section>
+```
 
   </main>
 
 <script type="module">
   import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
-  // ✅ Ton URL + clé anon (tu la remplaceras)
   const SUPABASE_URL = "https://frbofmnvfvzrtefwhdyo.supabase.co";
   const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZyYm9mbW52ZnZ6cnRlZndoZHlvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE0MzAxNzMsImV4cCI6MjA4NzAwNjE3M30.LgDTq7ncaclByUYi3FYr6LwFBpUFIbamKixmkv2U7HU";
   const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-const logoutMenuBtn = document.getElementById("logoutMenuBtn");
 
-if (logoutMenuBtn) {
-  logoutMenuBtn.onclick = async () => {
-    if (!confirm("Se déconnecter ?")) return;
+  // 🔐 Protection page
+  const { data: { session } } = await supabase.auth.getSession();
+  if (!session) { window.location.href = "./index.html"; throw new Error("Not authenticated"); }
 
-    await supabase.auth.signOut();
-    window.location.href = "./index.html";
-  };
-}
-  // 🔐 PROTECTION PAGE
-const { data: { session } } = await supabase.auth.getSession();
-
-if (!session) {
-  window.location.href = "./index.html";
-  throw new Error("Not authenticated");
-}
-  // Helper functions and DOM helper
   const $ = (id) => document.getElementById(id);
   const status = $("status");
-
   function setStatus(msg) { status.textContent = msg || ""; }
   function eur(cents) { return (Number(cents || 0) / 100).toFixed(2).replace(".", ",") + "€"; }
   function isoDate(d = new Date()) { return new Date(d.getTime() - d.getTimezoneOffset()*60000).toISOString().slice(0,10); }
   function addDaysISO(baseISO, days) { const d = new Date(baseISO + "T00:00:00"); d.setDate(d.getDate() + days); return isoDate(d); }
   function toInt(v, def=0){ const n = parseInt(String(v ?? "").trim(), 10); return Number.isFinite(n) ? n : def; }
-  function toEuroStringToCents(v){
-    const n = Number(String(v ?? "").trim().replace(",", "."));
-    if (!Number.isFinite(n)) return null;
-    return Math.round(n * 100);
-  }
+  function toEuroStringToCents(v){ const n = Number(String(v ?? "").trim().replace(",", ".")); if (!Number.isFinite(n)) return null; return Math.round(n * 100); }
   function esc(s){ return String(s ?? "").replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"','&quot;'); }
 
-  // Settings (local)
+  // ✅ Déconnexion — géré séparément, ne touche pas à la navigation
+  $("logoutBtn").onclick = async () => {
+    if (!confirm("Se déconnecter ?")) return;
+    await supabase.auth.signOut();
+    window.location.href = "./index.html";
+  };
+
   function loadSettings() {
     const raw = localStorage.getItem("sandops:settings");
     const def = { dlc:2, withdrawJ:3 };
@@ -440,124 +346,71 @@ if (!session) {
     alert("Paramètres sauvegardés ✅");
   }
 
-  // Drawer + navigation
   const drawer = $("drawer");
   const overlay = $("drawerOverlay");
   const title = $("title");
-
   function openDrawer() { drawer.classList.add("open"); overlay.classList.add("open"); }
   function closeDrawer() { drawer.classList.remove("open"); overlay.classList.remove("open"); }
-
   $("openDrawer").onclick = openDrawer;
   $("closeDrawer").onclick = closeDrawer;
   overlay.onclick = closeDrawer;
 
+  // ✅ Sélecteur strict : uniquement les boutons avec data-tab
   const navitems = document.querySelectorAll('.navitem[data-tab]');
   const sections = {
-    today: $("tab-today"),
-    delivery: $("tab-delivery"),
-    withdraw: $("tab-withdraw"),
-    history: $("tab-history"),
-    settings: $("tab-settings"),
-    expenses: $("tab-expenses"),
-    results: $("tab-results"),
+    today: $("tab-today"), delivery: $("tab-delivery"), withdraw: $("tab-withdraw"),
+    history: $("tab-history"), settings: $("tab-settings"), expenses: $("tab-expenses"), results: $("tab-results"),
   };
 
   function goTab(tab) {
+    closeDrawer();
     navitems.forEach(b => b.classList.remove("active"));
     document.querySelector(`.navitem[data-tab="${tab}"]`)?.classList.add("active");
     Object.entries(sections).forEach(([k, sec]) => sec.classList.toggle("active", k === tab));
-    title.textContent =
-      (tab === "today") ? "Aujourd’hui" :
-      (tab === "delivery") ? "Livraison" :
-      (tab === "withdraw") ? "À retirer" :
-      (tab === "history") ? "Historique" :
-      (tab === "expenses") ? "Dépenses" :
-      (tab === "results") ? "Résultats" : "Paramètres";
+    title.textContent = ({ today:"Aujourd'hui", delivery:"Livraison", withdraw:"À retirer", history:"Historique", expenses:"Dépenses", results:"Résultats", settings:"Paramètres" })[tab] || tab;
   }
+
+  // Onglet actif au démarrage
+  document.querySelector('.navitem[data-tab="today"]').classList.add("active");
   navitems.forEach(b => b.addEventListener("click", () => goTab(b.dataset.tab)));
 
-  // Data refs
-  let locations = [];     // all (active + inactive)
-  let products  = [];     // all (active + inactive)
-  let locationId = "";
-  let qtyByProduct = {};  // UI state for current (day + location) but only ACTIVE products shown
-
-  let withdrawQtyByDelivery = {};
-  let remainingByDelivery = {};
-  let lastDueList = null;
+  let locations = [], products = [], locationId = "";
+  let qtyByProduct = {}, withdrawQtyByDelivery = {}, remainingByDelivery = {}, lastDueList = null;
 
   function activeLocations(){ return locations.filter(l => l.is_active); }
   function activeProducts(){ return products.filter(p => p.is_active); }
+  function resetQty() { qtyByProduct = {}; for (const p of activeProducts()) qtyByProduct[p.id] = 0; }
 
-  function resetQty() {
-    qtyByProduct = {};
-    for (const p of activeProducts()) qtyByProduct[p.id] = 0;
-  }
-
-  // Init dates
-  $("dayDate").value = isoDate();
-  $("delDate").value = isoDate();
-  $("withdrawDate").value = isoDate();
+  $("dayDate").value = isoDate(); $("delDate").value = isoDate(); $("withdrawDate").value = isoDate();
   const today = isoDate();
-  $("histFrom").value = addDaysISO(today, -30);
-  $("histTo").value = today;
-  // Dépenses + Résultats (dates par défaut)
-  $("expDate").value = isoDate();
-  $("expFrom").value = addDaysISO(today, -30);
-  $("expTo").value = today;
-  $("resFrom").value = addDaysISO(today, -30);
-  $("resTo").value = today;
+  $("histFrom").value = addDaysISO(today, -30); $("histTo").value = today;
+  $("expDate").value = isoDate(); $("expFrom").value = addDaysISO(today, -30); $("expTo").value = today;
+  $("resFrom").value = addDaysISO(today, -30); $("resTo").value = today;
 
-  // Load refs (fresh)
   async function loadRefsFresh() {
     setStatus("Chargement produits/lieux…");
-
-    const locRes = await supabase.from("locations")
-      .select("id,name,sort_order,is_active")
-      .order("sort_order", { ascending: true });
-
-    const prodRes = await supabase.from("products")
-      .select("id,name,price_cents,sort_order,is_active")
-      .order("sort_order", { ascending: true });
-
+    const locRes = await supabase.from("locations").select("id,name,sort_order,is_active").order("sort_order", { ascending: true });
+    const prodRes = await supabase.from("products").select("id,name,price_cents,sort_order,is_active").order("sort_order", { ascending: true });
     setStatus("");
-
     if (locRes.error) throw locRes.error;
     if (prodRes.error) throw prodRes.error;
-
     locations = (locRes.data || []).map(x => ({ ...x, is_active: !!x.is_active }));
     products  = (prodRes.data || []).map(x => ({ ...x, is_active: !!x.is_active }));
-
-    // locationId doit pointer sur un lieu ACTIF si possible
     const actLocs = activeLocations();
     if (!locationId || !actLocs.find(l => l.id === locationId)) locationId = actLocs[0]?.id || "";
-
     resetQty();
   }
 
   async function reloadAllData() {
     await loadRefsFresh();
-    renderLocationPills();
-    renderQuickPills();
-    renderDeliveryList();
-    updateDeliveryTotals();
-    await refreshSettingsLists();
-    await refreshToday();
-    await refreshExpenses();
-    await refreshResults();
-    // withdraw/history restent OK
+    renderLocationPills(); renderQuickPills(); renderDeliveryList(); updateDeliveryTotals();
+    await refreshSettingsLists(); await refreshToday(); await refreshExpenses(); await refreshResults();
   }
 
-  // UI pills
   function renderLocationPills() {
-    const box = $("locationPills");
-    box.innerHTML = "";
+    const box = $("locationPills"); box.innerHTML = "";
     const locs = activeLocations();
-    if (locs.length === 0) {
-      box.innerHTML = `<div class="muted">Aucun lieu actif. Va dans Paramètres.</div>`;
-      return;
-    }
+    if (!locs.length) { box.innerHTML = `<div class="muted">Aucun lieu actif. Va dans Paramètres.</div>`; return; }
     locs.forEach(l => {
       const b = document.createElement("button");
       b.className = "pill" + (l.id === locationId ? " active" : "");
@@ -568,58 +421,29 @@ if (!session) {
   }
 
   function renderQuickPills() {
-    const box = $("quickLocPills");
-    box.innerHTML = "";
+    const box = $("quickLocPills"); box.innerHTML = "";
     const locs = activeLocations();
-    if (locs.length === 0) {
-      box.innerHTML = `<div class="muted">Ajoute/active un lieu dans Paramètres.</div>`;
-      return;
-    }
+    if (!locs.length) { box.innerHTML = `<div class="muted">Ajoute/active un lieu dans Paramètres.</div>`; return; }
     locs.forEach(l => {
       const b = document.createElement("button");
-      b.className = "pill";
-      b.textContent = l.name;
-      b.onclick = () => {
-        $("delDate").value = $("dayDate").value || isoDate();
-        locationId = l.id;
-        renderLocationPills();
-        goTab("delivery");
-      };
+      b.className = "pill"; b.textContent = l.name;
+      b.onclick = () => { $("delDate").value = $("dayDate").value || isoDate(); locationId = l.id; renderLocationPills(); goTab("delivery"); };
       box.appendChild(b);
     });
   }
 
-  // DELIVERY list
   function renderDeliveryList() {
     const hide = $("hideZeros").checked;
-    const list = $("deliveryList");
-    list.innerHTML = "";
-
+    const list = $("deliveryList"); list.innerHTML = "";
     const prods = activeProducts().slice().sort((a,b)=> toInt(a.sort_order,9999)-toInt(b.sort_order,9999));
-    if (prods.length === 0) {
-      list.innerHTML = `<div class="muted">Aucun sandwich actif. Va dans Paramètres.</div>`;
-      return;
-    }
-
+    if (!prods.length) { list.innerHTML = `<div class="muted">Aucun sandwich actif. Va dans Paramètres.</div>`; return; }
     const visible = hide ? prods.filter(p => (qtyByProduct[p.id] || 0) > 0) : prods;
     const toShow = (visible.length === 0 && hide) ? prods : visible;
-
     toShow.forEach(p => {
       const q = qtyByProduct[p.id] || 0;
-
-      const row = document.createElement("div");
-      row.className = "row";
-      row.innerHTML = `
-        <div>
-          <div class="name">${esc(p.name)}</div>
-          <div class="sub">${eur(p.price_cents)}</div>
-        </div>
-        <div class="qty">
-          <button class="btn" type="button">−</button>
-          <div class="qnum">${q}</div>
-          <button class="btn" type="button">+</button>
-        </div>
-      `;
+      const row = document.createElement("div"); row.className = "row";
+      row.innerHTML = `<div><div class="name">${esc(p.name)}</div><div class="sub">${eur(p.price_cents)}</div></div>
+        <div class="qty"><button class="btn" type="button">−</button><div class="qnum">${q}</div><button class="btn" type="button">+</button></div>`;
       const btns = row.querySelectorAll("button");
       btns[0].onclick = () => { qtyByProduct[p.id] = Math.max(0, q - 1); renderDeliveryList(); updateDeliveryTotals(); };
       btns[1].onclick = () => { qtyByProduct[p.id] = q + 1; renderDeliveryList(); updateDeliveryTotals(); };
@@ -629,327 +453,135 @@ if (!session) {
 
   function updateDeliveryTotals() {
     let pieces = 0, cents = 0;
-    for (const p of activeProducts()) {
-      const q = Number(qtyByProduct[p.id] || 0);
-      pieces += q;
-      cents += q * Number(p.price_cents || 0);
-    }
-    $("delTotalPieces").textContent = String(pieces);
-    $("delTotalEur").textContent = eur(cents);
+    for (const p of activeProducts()) { const q = Number(qtyByProduct[p.id] || 0); pieces += q; cents += q * Number(p.price_cents || 0); }
+    $("delTotalPieces").textContent = String(pieces); $("delTotalEur").textContent = eur(cents);
   }
 
   $("hideZeros").addEventListener("change", renderDeliveryList);
 
-  // ---- Supabase helpers (DAY + LOCATION)
   async function loadDayLocationFromDB(dateISO, locId) {
-    const res = await supabase
-      .from("deliveries")
-      .select("product_id, qty_depose")
-      .eq("date_fabrication", dateISO)
-      .eq("location_id", locId);
-
+    const res = await supabase.from("deliveries").select("product_id, qty_depose").eq("date_fabrication", dateISO).eq("location_id", locId);
     if (res.error) { alert("Erreur chargement: " + res.error.message); return false; }
-
     resetQty();
-    // on ne remplit QUE les produits actifs (si un produit a été désactivé, on l’ignore dans l’UI)
     const activeIds = new Set(activeProducts().map(p => p.id));
-    for (const r of (res.data || [])) {
-      if (!activeIds.has(r.product_id)) continue;
-      qtyByProduct[r.product_id] = (qtyByProduct[r.product_id] || 0) + Number(r.qty_depose || 0);
-    }
-    renderDeliveryList();
-    updateDeliveryTotals();
-    return true;
+    for (const r of (res.data || [])) { if (!activeIds.has(r.product_id)) continue; qtyByProduct[r.product_id] = (qtyByProduct[r.product_id] || 0) + Number(r.qty_depose || 0); }
+    renderDeliveryList(); updateDeliveryTotals(); return true;
   }
 
   async function saveDayLocationToDB(dateISO, locId) {
     const s = loadSettings();
     const retrait = addDaysISO(dateISO, Number(s.withdrawJ || 3));
-
-    const rows = activeProducts()
-      .map(p => ({ product_id: p.id, qty: Number(qtyByProduct[p.id] || 0) }))
-      .filter(x => x.qty > 0);
-
-    setStatus("Enregistrement…");
-    $("saveLocationBtn").disabled = true;
-
-    // ✅ remplace (jour + lieu) : delete puis insert
-    const delOld = await supabase
-      .from("deliveries")
-      .delete()
-      .eq("date_fabrication", dateISO)
-      .eq("location_id", locId);
-
-    if (delOld.error) {
-      $("saveLocationBtn").disabled = false;
-      setStatus("");
-      alert("Erreur delete (RLS?) : " + delOld.error.message);
-      return;
-    }
-
-    if (rows.length === 0) {
-      $("saveLocationBtn").disabled = false;
-      setStatus("");
-      alert("Lieu mis à 0 (enregistré) ✅");
-      await refreshToday();
-      return;
-    }
-
-    const payload = rows.map(r => ({
-      date_fabrication: dateISO,
-      date_retrait: retrait,
-      location_id: locId,
-      product_id: r.product_id,
-      qty_depose: r.qty
-    }));
-
+    const rows = activeProducts().map(p => ({ product_id: p.id, qty: Number(qtyByProduct[p.id] || 0) })).filter(x => x.qty > 0);
+    setStatus("Enregistrement…"); $("saveLocationBtn").disabled = true;
+    const delOld = await supabase.from("deliveries").delete().eq("date_fabrication", dateISO).eq("location_id", locId);
+    if (delOld.error) { $("saveLocationBtn").disabled = false; setStatus(""); alert("Erreur delete (RLS?) : " + delOld.error.message); return; }
+    if (!rows.length) { $("saveLocationBtn").disabled = false; setStatus(""); alert("Lieu mis à 0 (enregistré) ✅"); await refreshToday(); return; }
+    const payload = rows.map(r => ({ date_fabrication: dateISO, date_retrait: retrait, location_id: locId, product_id: r.product_id, qty_depose: r.qty }));
     const ins = await supabase.from("deliveries").insert(payload);
-
-    $("saveLocationBtn").disabled = false;
-    setStatus("");
-
+    $("saveLocationBtn").disabled = false; setStatus("");
     if (ins.error) { alert("Erreur insert: " + ins.error.message); return; }
-
-    alert("Enregistré ✅ (jour + lieu remplacé)");
-    // IMPORTANT: on ne reset pas l’écran => tu gardes le visuel
-    await refreshToday();
+    alert("Enregistré ✅ (jour + lieu remplacé)"); await refreshToday();
   }
 
-  $("loadFromDBBtn").onclick = async () => {
-    const d = $("delDate").value || isoDate();
-    if (!locationId) { alert("Aucun lieu actif. Va dans Paramètres."); return; }
-    await loadDayLocationFromDB(d, locationId);
-  };
+  $("loadFromDBBtn").onclick = async () => { const d = $("delDate").value || isoDate(); if (!locationId) { alert("Aucun lieu actif."); return; } await loadDayLocationFromDB(d, locationId); };
+  $("saveLocationBtn").onclick = async () => { const d = $("delDate").value || isoDate(); if (!locationId) { alert("Aucun lieu actif."); return; } await saveDayLocationToDB(d, locationId); };
 
-  $("saveLocationBtn").onclick = async () => {
-    const d = $("delDate").value || isoDate();
-    if (!locationId) { alert("Aucun lieu actif. Va dans Paramètres."); return; }
-    await saveDayLocationToDB(d, locationId);
-  };
-
-  // ---- TODAY (summary)
-  async function refreshToday() {
-    await refreshTodayProductionOnly();
-    await refreshTodayWithdrawSummary();
-  }
+  async function refreshToday() { await refreshTodayProductionOnly(); await refreshTodayWithdrawSummary(); }
   $("todayRefresh").onclick = refreshToday;
 
   async function refreshTodayProductionOnly() {
     const dateFab = $("dayDate").value || isoDate();
     setStatus("Calcul…");
-
-    const res = await supabase
-      .from("deliveries")
-      .select("location_id, product_id, qty_depose")
-      .eq("date_fabrication", dateFab);
-
-    setStatus("");
-    if (res.error) { alert("Erreur: " + res.error.message); return; }
-
+    const res = await supabase.from("deliveries").select("location_id, product_id, qty_depose").eq("date_fabrication", dateFab);
+    setStatus(""); if (res.error) { alert("Erreur: " + res.error.message); return; }
     const locsSorted = activeLocations().slice().sort((a,b)=> toInt(a.sort_order,9999)-toInt(b.sort_order,9999));
     const prodsSorted = activeProducts().slice().sort((a,b)=> toInt(a.sort_order,9999)-toInt(b.sort_order,9999));
-
-    const locById  = Object.fromEntries(locsSorted.map(l => [l.id, l]));
+    const locById = Object.fromEntries(locsSorted.map(l => [l.id, l]));
     const prodById = Object.fromEntries(prodsSorted.map(p => [p.id, p]));
-
-    // totals per product + per location
-    const byProd = new Map();     // product_id -> { perLoc: Map, totalQty, totalCents }
-    const locTotals = new Map();  // loc_id -> qty total
+    const byProd = new Map(); const locTotals = new Map();
     for (const l of locsSorted) locTotals.set(l.id, 0);
-
     for (const r of (res.data || [])) {
-      // ignore inactive
-      const p = prodById[r.product_id];
-      const l = locById[r.location_id];
+      const p = prodById[r.product_id], l = locById[r.location_id];
       if (!p || !l) continue;
-
       const q = Number(r.qty_depose || 0);
-
       if (!byProd.has(p.id)) byProd.set(p.id, { product:p, perLoc:new Map(), totalQty:0, totalCents:0 });
       const g = byProd.get(p.id);
-      g.perLoc.set(l.id, (g.perLoc.get(l.id) || 0) + q);
-      g.totalQty += q;
-      g.totalCents += q * Number(p.price_cents || 0);
-
+      g.perLoc.set(l.id, (g.perLoc.get(l.id) || 0) + q); g.totalQty += q; g.totalCents += q * Number(p.price_cents || 0);
       locTotals.set(l.id, (locTotals.get(l.id) || 0) + q);
     }
-
     let totalPieces = 0, totalCents = 0;
     for (const g of byProd.values()) { totalPieces += g.totalQty; totalCents += g.totalCents; }
-    $("todayPieces").textContent = String(totalPieces);
-    $("todayEur").textContent = eur(totalCents);
-
-    if (locsSorted.length === 0 || prodsSorted.length === 0) {
-      $("todayTable").innerHTML = `<div class="muted" style="margin-top:10px;">Ajoute/active au moins 1 lieu et 1 sandwich dans Paramètres.</div>`;
-      return;
-    }
-
-    let html = `<table>
-      <thead><tr>
-        <th>Sandwich</th>
-        ${locsSorted.map(l => `<th>${esc(l.name)}</th>`).join("")}
-        <th>TOTAL</th>
-      </tr></thead><tbody>`;
-
-    for (const p of prodsSorted) {
-      const g = byProd.get(p.id);
-      const t = g?.totalQty || 0;
-      html += `<tr>
-        <td><b>${esc(p.name)}</b></td>
-        ${locsSorted.map(l => `<td>${g?.perLoc.get(l.id) || 0}</td>`).join("")}
-        <td><b>${t}</b></td>
-      </tr>`;
-    }
-
-    // ✅ Ligne TOTAL en bas (totaux par lieu + total général)
-    html += `</tbody><tfoot><tr>
-      <td>TOTAL</td>
-      ${locsSorted.map(l => `<td>${locTotals.get(l.id) || 0}</td>`).join("")}
-      <td>${totalPieces}</td>
-    </tr></tfoot></table>`;
-
+    $("todayPieces").textContent = String(totalPieces); $("todayEur").textContent = eur(totalCents);
+    if (!locsSorted.length || !prodsSorted.length) { $("todayTable").innerHTML = `<div class="muted" style="margin-top:10px;">Ajoute/active au moins 1 lieu et 1 sandwich dans Paramètres.</div>`; return; }
+    let html = `<table><thead><tr><th>Sandwich</th>${locsSorted.map(l=>`<th>${esc(l.name)}</th>`).join("")}<th>TOTAL</th></tr></thead><tbody>`;
+    for (const p of prodsSorted) { const g = byProd.get(p.id); const t = g?.totalQty||0; html += `<tr><td><b>${esc(p.name)}</b></td>${locsSorted.map(l=>`<td>${g?.perLoc.get(l.id)||0}</td>`).join("")}<td><b>${t}</b></td></tr>`; }
+    html += `</tbody><tfoot><tr><td>TOTAL</td>${locsSorted.map(l=>`<td>${locTotals.get(l.id)||0}</td>`).join("")}<td>${totalPieces}</td></tr></tfoot></table>`;
     $("todayTable").innerHTML = html;
   }
 
   async function refreshTodayWithdrawSummary() {
     const todayISO = $("dayDate").value || isoDate();
-
     const v = await supabase.from("v_delivery_remaining").select("*");
     if (v.error) { $("todayWithdrawSummary").textContent = "Erreur: " + v.error.message; return; }
-
     const due = (v.data || []).filter(r => Number(r.qty_remaining||0) > 0 && String(r.date_retrait) <= todayISO);
-
-    const byLoc = new Map();
-    let total = 0;
-
-    // on affiche seulement les lieux actifs si possible
+    const byLoc = new Map(); let total = 0;
     const locByIdAll = Object.fromEntries(locations.map(l => [l.id, l]));
-
-    for (const r of due) {
-      const k = r.location_id;
-      const q = Number(r.qty_remaining||0);
-      byLoc.set(k, (byLoc.get(k) || 0) + q);
-      total += q;
-    }
-
+    for (const r of due) { const k = r.location_id, q = Number(r.qty_remaining||0); byLoc.set(k, (byLoc.get(k)||0)+q); total += q; }
     const lines = [];
     for (const [locId, q] of byLoc.entries()) {
       const name = locByIdAll[locId]?.name || locId;
       const active = locByIdAll[locId]?.is_active !== false;
       lines.push(`${esc(name)} : ${q} pièce(s) ${active ? "" : '<span class="badgeOff">inactif</span>'}`);
     }
-
     lines.sort((a,b)=> a.localeCompare(b));
-
-    $("todayWithdrawSummary").innerHTML = lines.length
-      ? `${lines.join("<br>")}<br><br><b>Total à retirer: ${total} pièce(s)</b>`
-      : `Rien à retirer ✅`;
+    $("todayWithdrawSummary").innerHTML = lines.length ? `${lines.join("<br>")}<br><br><b>Total à retirer: ${total} pièce(s)</b>` : `Rien à retirer ✅`;
   }
 
-  $("gotoWithdraw").onclick = () => {
-    $("withdrawDate").value = $("dayDate").value || isoDate();
-    goTab("withdraw");
-    refreshWithdraw();
-  };
-
-  // ---- WITHDRAW page (detailed)
+  $("gotoWithdraw").onclick = () => { $("withdrawDate").value = $("dayDate").value || isoDate(); goTab("withdraw"); refreshWithdraw(); };
   $("refreshWithdraw").onclick = refreshWithdraw;
-  $("btnWithdrawAll").onclick = () => {
-    if (!lastDueList) return;
-    Object.keys(remainingByDelivery).forEach(id => withdrawQtyByDelivery[id] = remainingByDelivery[id]);
-    renderWithdrawList(lastDueList);
-  };
-  $("btnWithdrawNone").onclick = () => {
-    if (!lastDueList) return;
-    Object.keys(withdrawQtyByDelivery).forEach(id => withdrawQtyByDelivery[id] = 0);
-    renderWithdrawList(lastDueList);
-  };
+  $("btnWithdrawAll").onclick = () => { if (!lastDueList) return; Object.keys(remainingByDelivery).forEach(id => withdrawQtyByDelivery[id] = remainingByDelivery[id]); renderWithdrawList(lastDueList); };
+  $("btnWithdrawNone").onclick = () => { if (!lastDueList) return; Object.keys(withdrawQtyByDelivery).forEach(id => withdrawQtyByDelivery[id] = 0); renderWithdrawList(lastDueList); };
   $("saveWithdrawBtn").onclick = saveWithdrawals;
 
   async function refreshWithdraw() {
     setStatus("Chargement des lots à retirer…");
     const todayISO = $("withdrawDate").value || isoDate();
-
     const v = await supabase.from("v_delivery_remaining").select("*");
-    setStatus("");
-    if (v.error) { alert("Erreur: " + v.error.message); return; }
-
-    // map ALL (active+inactive) pour montrer les noms même si désactivé
+    setStatus(""); if (v.error) { alert("Erreur: " + v.error.message); return; }
     const prodByIdAll = Object.fromEntries(products.map(p => [p.id, p]));
     const locByIdAll  = Object.fromEntries(locations.map(l => [l.id, l]));
-
     const due = (v.data || [])
       .filter(r => Number(r.qty_remaining||0) > 0 && String(r.date_retrait) <= todayISO)
-      .map(r => ({
-        delivery_id: r.delivery_id,
-        date_fabrication: r.date_fabrication,
-        date_retrait: r.date_retrait,
-        qty_remaining: Number(r.qty_remaining||0),
-        product: prodByIdAll[r.product_id],
-        location: locByIdAll[r.location_id],
-      }))
+      .map(r => ({ delivery_id: r.delivery_id, date_fabrication: r.date_fabrication, date_retrait: r.date_retrait, qty_remaining: Number(r.qty_remaining||0), product: prodByIdAll[r.product_id], location: locByIdAll[r.location_id] }))
       .filter(x => x.product && x.location)
       .sort((a,b) => {
-        if (toInt(a.location.sort_order,9999) !== toInt(b.location.sort_order,9999)) return toInt(a.location.sort_order,9999) - toInt(b.location.sort_order,9999);
-        if (toInt(a.product.sort_order,9999) !== toInt(b.product.sort_order,9999)) return toInt(a.product.sort_order,9999) - toInt(b.product.sort_order,9999);
+        if (toInt(a.location.sort_order,9999) !== toInt(b.location.sort_order,9999)) return toInt(a.location.sort_order,9999)-toInt(b.location.sort_order,9999);
+        if (toInt(a.product.sort_order,9999) !== toInt(b.product.sort_order,9999)) return toInt(a.product.sort_order,9999)-toInt(b.product.sort_order,9999);
         return String(a.date_fabrication).localeCompare(String(b.date_fabrication));
       });
-
-    lastDueList = due;
-    remainingByDelivery = {};
-    withdrawQtyByDelivery = {};
-    for (const d of due) {
-      remainingByDelivery[d.delivery_id] = d.qty_remaining;
-      withdrawQtyByDelivery[d.delivery_id] = 0;
-    }
+    lastDueList = due; remainingByDelivery = {}; withdrawQtyByDelivery = {};
+    for (const d of due) { remainingByDelivery[d.delivery_id] = d.qty_remaining; withdrawQtyByDelivery[d.delivery_id] = 0; }
     renderWithdrawList(due);
   }
 
   function renderWithdrawList(dueList) {
-    const list = $("withdrawList");
-    list.innerHTML = "";
-
-    if (!dueList || dueList.length === 0) {
-      list.innerHTML = `<div class="card"><div style="font-weight:900;">Rien à retirer ✅</div><div class="muted">Aucun lot arrivé à échéance à cette date.</div></div>`;
-      return;
-    }
-
+    const list = $("withdrawList"); list.innerHTML = "";
+    if (!dueList || !dueList.length) { list.innerHTML = `<div class="card"><div style="font-weight:900;">Rien à retirer ✅</div><div class="muted">Aucun lot arrivé à échéance à cette date.</div></div>`; return; }
     const byLoc = new Map();
-    dueList.forEach(x => {
-      const k = x.location.name;
-      if (!byLoc.has(k)) byLoc.set(k, []);
-      byLoc.get(k).push(x);
-    });
-
+    dueList.forEach(x => { const k = x.location.name; if (!byLoc.has(k)) byLoc.set(k, []); byLoc.get(k).push(x); });
     for (const [locName, items] of byLoc.entries()) {
-      const title = document.createElement("div");
-      title.style.fontWeight = "900";
-      title.style.margin = "16px 0 8px 0";
-      title.innerHTML = `${esc(locName)} ${items[0]?.location?.is_active ? "" : '<span class="badgeOff">inactif</span>'}`;
-      list.appendChild(title);
-
+      const t = document.createElement("div"); t.style.fontWeight="900"; t.style.margin="16px 0 8px 0";
+      t.innerHTML = `${esc(locName)} ${items[0]?.location?.is_active ? "" : '<span class="badgeOff">inactif</span>'}`;
+      list.appendChild(t);
       items.forEach(item => {
-        const q = withdrawQtyByDelivery[item.delivery_id] || 0;
-        const max = item.qty_remaining;
-
-        const row = document.createElement("div");
-        row.className = "row";
-        row.innerHTML = `
-          <div>
-            <div class="name">${esc(item.product.name)} ${item.product.is_active ? "" : '<span class="badgeOff">inactif</span>'}</div>
-            <div class="sub">Fab ${esc(item.date_fabrication)} · À retirer dès ${esc(item.date_retrait)} · Reste: ${max}</div>
-          </div>
-          <div class="qty">
-            <button class="btn" type="button">−</button>
-            <div class="qnum">${q}</div>
-            <button class="btn" type="button">+</button>
-          </div>
-        `;
-
+        const q = withdrawQtyByDelivery[item.delivery_id] || 0, max = item.qty_remaining;
+        const row = document.createElement("div"); row.className = "row";
+        row.innerHTML = `<div><div class="name">${esc(item.product.name)} ${item.product.is_active ? "" : '<span class="badgeOff">inactif</span>'}</div>
+          <div class="sub">Fab ${esc(item.date_fabrication)} · À retirer dès ${esc(item.date_retrait)} · Reste: ${max}</div></div>
+          <div class="qty"><button class="btn" type="button">−</button><div class="qnum">${q}</div><button class="btn" type="button">+</button></div>`;
         const btns = row.querySelectorAll("button");
-        btns[0].onclick = () => { withdrawQtyByDelivery[item.delivery_id] = Math.max(0, q - 1); renderWithdrawList(dueList); };
-        btns[1].onclick = () => { withdrawQtyByDelivery[item.delivery_id] = Math.min(max, q + 1); renderWithdrawList(dueList); };
-
+        btns[0].onclick = () => { withdrawQtyByDelivery[item.delivery_id] = Math.max(0, q-1); renderWithdrawList(dueList); };
+        btns[1].onclick = () => { withdrawQtyByDelivery[item.delivery_id] = Math.min(max, q+1); renderWithdrawList(dueList); };
         list.appendChild(row);
       });
     }
@@ -957,248 +589,96 @@ if (!session) {
 
   async function saveWithdrawals() {
     const dateEff = $("withdrawDate").value || isoDate();
-
-    const rows = Object.entries(withdrawQtyByDelivery)
-      .map(([delivery_id, qty_retire]) => ({ delivery_id, qty_retire: Number(qty_retire || 0) }))
-      .filter(x => x.qty_retire > 0);
-
-    if (rows.length === 0) { alert("Aucun retrait encodé (tout est à 0)."); return; }
-
-    for (const r of rows) {
-      const max = remainingByDelivery[r.delivery_id] ?? 0;
-      if (r.qty_retire > max) { alert("Retrait trop grand (max " + max + ")."); return; }
-    }
-
-    $("saveWithdrawBtn").disabled = true;
-    setStatus("Enregistrement retraits…");
-
-    const payload = rows.map(r => ({
-      date_retrait_effectif: dateEff,
-      delivery_id: r.delivery_id,
-      qty_retire: r.qty_retire
-    }));
-
-    const ins = await supabase.from("withdrawals").insert(payload);
-
-    $("saveWithdrawBtn").disabled = false;
-    setStatus("");
-
+    const rows = Object.entries(withdrawQtyByDelivery).map(([delivery_id, qty_retire]) => ({ delivery_id, qty_retire: Number(qty_retire||0) })).filter(x => x.qty_retire > 0);
+    if (!rows.length) { alert("Aucun retrait encodé (tout est à 0)."); return; }
+    for (const r of rows) { if (r.qty_retire > (remainingByDelivery[r.delivery_id]??0)) { alert("Retrait trop grand."); return; } }
+    $("saveWithdrawBtn").disabled = true; setStatus("Enregistrement retraits…");
+    const ins = await supabase.from("withdrawals").insert(rows.map(r => ({ date_retrait_effectif: dateEff, delivery_id: r.delivery_id, qty_retire: r.qty_retire })));
+    $("saveWithdrawBtn").disabled = false; setStatus("");
     if (ins.error) { alert("Erreur: " + ins.error.message); return; }
-
     alert("Retraits enregistrés ✅");
-    await refreshWithdraw();
-    await refreshToday();
-    await refreshHistory();
+    await refreshWithdraw(); await refreshToday(); await refreshHistory();
   }
 
-  // ---- HISTORY
   $("refreshHist").onclick = refreshHistory;
-
   async function refreshHistory() {
-    const from = $("histFrom").value || addDaysISO(isoDate(), -30);
-    const to   = $("histTo").value || isoDate();
-
+    const from = $("histFrom").value || addDaysISO(isoDate(), -30), to = $("histTo").value || isoDate();
     setStatus("Chargement historique…");
-
-    const del = await supabase
-      .from("deliveries")
-      .select("date_fabrication, product_id, qty_depose")
-      .gte("date_fabrication", from)
-      .lte("date_fabrication", to);
-
-    const wit = await supabase
-      .from("withdrawals")
-      .select("date_retrait_effectif, qty_retire, delivery_id")
-      .gte("date_retrait_effectif", from)
-      .lte("date_retrait_effectif", to);
-
+    const del = await supabase.from("deliveries").select("date_fabrication, product_id, qty_depose").gte("date_fabrication", from).lte("date_fabrication", to);
+    const wit = await supabase.from("withdrawals").select("date_retrait_effectif, qty_retire").gte("date_retrait_effectif", from).lte("date_retrait_effectif", to);
     setStatus("");
-
     if (del.error) { alert("Erreur deliveries: " + del.error.message); return; }
     if (wit.error) { alert("Erreur withdrawals: " + wit.error.message); return; }
-
     const prodByIdAll = Object.fromEntries(products.map(p => [p.id, p]));
-
     let deliveredPieces = 0, revenueCents = 0;
-    for (const r of (del.data || [])) {
-      deliveredPieces += Number(r.qty_depose||0);
-      const p = prodByIdAll[r.product_id];
-      if (p) revenueCents += Number(r.qty_depose||0) * Number(p.price_cents||0);
-    }
-
+    for (const r of (del.data||[])) { deliveredPieces += Number(r.qty_depose||0); const p = prodByIdAll[r.product_id]; if (p) revenueCents += Number(r.qty_depose||0)*Number(p.price_cents||0); }
     let withdrawnPieces = 0;
-    for (const r of (wit.data || [])) withdrawnPieces += Number(r.qty_retire||0);
-
-    $("histDelivered").textContent = String(deliveredPieces);
-    $("histWithdrawn").textContent = String(withdrawnPieces);
-    $("histRevenue").textContent = eur(revenueCents);
-
+    for (const r of (wit.data||[])) withdrawnPieces += Number(r.qty_retire||0);
+    $("histDelivered").textContent = String(deliveredPieces); $("histWithdrawn").textContent = String(withdrawnPieces); $("histRevenue").textContent = eur(revenueCents);
     const byDate = new Map();
-    for (const r of (del.data || [])) {
-      const d = r.date_fabrication;
-      if (!byDate.has(d)) byDate.set(d, { pieces: 0, cents: 0 });
-      const p = prodByIdAll[r.product_id];
-      byDate.get(d).pieces += Number(r.qty_depose||0);
-      if (p) byDate.get(d).cents += Number(r.qty_depose||0) * Number(p.price_cents||0);
+    for (const r of (del.data||[])) {
+      const d = r.date_fabrication; if (!byDate.has(d)) byDate.set(d, { pieces:0, cents:0 });
+      const p = prodByIdAll[r.product_id]; byDate.get(d).pieces += Number(r.qty_depose||0); if (p) byDate.get(d).cents += Number(r.qty_depose||0)*Number(p.price_cents||0);
     }
-
-    const dates = [...byDate.keys()].sort((a,b) => b.localeCompare(a)).slice(0, 12);
-
+    const dates = [...byDate.keys()].sort((a,b)=>b.localeCompare(a)).slice(0,12);
     let html = "";
-    for (const d of dates) {
-      const x = byDate.get(d);
-      html += `<div class="row">
-        <div>
-          <div class="name">${esc(d)}</div>
-          <div class="sub">${x.pieces} pièces</div>
-        </div>
-        <div style="font-weight:900;">${eur(x.cents)}</div>
-      </div>`;
-    }
+    for (const d of dates) { const x = byDate.get(d); html += `<div class="row"><div><div class="name">${esc(d)}</div><div class="sub">${x.pieces} pièces</div></div><div style="font-weight:900;">${eur(x.cents)}</div></div>`; }
     $("histList").innerHTML = html || `<div class="muted">Aucune donnée sur cette période.</div>`;
   }
 
-
-  // ---- EXPENSES
   $("refreshExpenses").onclick = refreshExpenses;
   $("addExpenseBtn").onclick = addExpenseFromForm;
-  $("clearExpenseFormBtn").onclick = () => {
-    $("expAmount").value = "";
-    $("expNote").value = "";
-    $("expReceipt").value = "";
-    $("expCategory").value = "Parking";
-    $("expDate").value = isoDate();
-  };
+  $("clearExpenseFormBtn").onclick = () => { $("expAmount").value=""; $("expNote").value=""; $("expReceipt").value=""; $("expCategory").value="Parking"; $("expDate").value=isoDate(); };
 
   async function addExpenseFromForm() {
-    const expense_date = $("expDate").value || isoDate();
-    const amount_cents = toEuroStringToCents($("expAmount").value);
-    const category = ($("expCategory").value || "").trim();
-    const note = ($("expNote").value || "").trim() || null;
-    const file = $("expReceipt").files?.[0] || null;
-
-    if (!amount_cents || amount_cents <= 0) { alert("Montant invalide."); return; }
-    if (!category) { alert("Catégorie invalide."); return; }
-
-    $("addExpenseBtn").disabled = true;
-    setStatus("Ajout dépense…");
-
+    const expense_date = $("expDate").value||isoDate(), amount_cents = toEuroStringToCents($("expAmount").value);
+    const category = ($("expCategory").value||"").trim(), note = ($("expNote").value||"").trim()||null;
+    const file = $("expReceipt").files?.[0]||null;
+    if (!amount_cents||amount_cents<=0) { alert("Montant invalide."); return; }
+    $("addExpenseBtn").disabled = true; setStatus("Ajout dépense…");
     let receipt_path = null;
-
-    // Upload facultatif
     if (file) {
-      const ext = (file.name.split(".").pop() || "jpg").toLowerCase();
-      const safeExt = ext.replace(/[^a-z0-9]/g,"").slice(0,6) || "jpg";
+      const ext = (file.name.split(".").pop()||"jpg").toLowerCase();
+      const safeExt = ext.replace(/[^a-z0-9]/g,"").slice(0,6)||"jpg";
       const path = `receipts/${expense_date}/${crypto.randomUUID()}.${safeExt}`;
-
-      const up = await supabase.storage.from("receipts").upload(path, file, { upsert: false });
-      if (up.error) {
-        $("addExpenseBtn").disabled = false;
-        setStatus("");
-        alert("Erreur upload scan: " + up.error.message);
-        return;
-      }
+      const up = await supabase.storage.from("receipts").upload(path, file, { upsert:false });
+      if (up.error) { $("addExpenseBtn").disabled=false; setStatus(""); alert("Erreur upload: "+up.error.message); return; }
       receipt_path = path;
     }
-
-    const ins = await supabase.from("expenses").insert({
-      expense_date,
-      amount_cents,
-      category,
-      note,
-      receipt_path
-    });
-
-    $("addExpenseBtn").disabled = false;
-    setStatus("");
-
-    if (ins.error) { alert("Erreur dépense: " + ins.error.message); return; }
-
-    alert("Dépense ajoutée ✅");
-    $("expAmount").value = "";
-    $("expNote").value = "";
-    $("expReceipt").value = "";
-
-    await refreshExpenses();
-    await refreshResults(); // mets à jour le bénéfice si la période inclut la date
+    const ins = await supabase.from("expenses").insert({ expense_date, amount_cents, category, note, receipt_path });
+    $("addExpenseBtn").disabled=false; setStatus("");
+    if (ins.error) { alert("Erreur dépense: "+ins.error.message); return; }
+    alert("Dépense ajoutée ✅"); $("expAmount").value=""; $("expNote").value=""; $("expReceipt").value="";
+    await refreshExpenses(); await refreshResults();
   }
 
   async function refreshExpenses() {
-    const from = $("expFrom").value || addDaysISO(isoDate(), -30);
-    const to   = $("expTo").value || isoDate();
-
+    const from = $("expFrom").value||addDaysISO(isoDate(),-30), to = $("expTo").value||isoDate();
     setStatus("Chargement dépenses…");
-
-    const res = await supabase
-      .from("expenses")
-      .select("id, expense_date, amount_cents, category, note, receipt_path, created_at")
-      .gte("expense_date", from)
-      .lte("expense_date", to)
-      .order("expense_date", { ascending: false })
-      .order("created_at", { ascending: false });
-
-    setStatus("");
-
-    if (res.error) { alert("Erreur dépenses: " + res.error.message); return; }
-
-    const rows = res.data || [];
-    let total = 0;
-    for (const r of rows) total += Number(r.amount_cents || 0);
+    const res = await supabase.from("expenses").select("id,expense_date,amount_cents,category,note,receipt_path,created_at").gte("expense_date",from).lte("expense_date",to).order("expense_date",{ascending:false}).order("created_at",{ascending:false});
+    setStatus(""); if (res.error) { alert("Erreur: "+res.error.message); return; }
+    const rows = res.data||[]; let total=0; for (const r of rows) total += Number(r.amount_cents||0);
     $("expTotal").textContent = eur(total);
-
     $("expList").innerHTML = renderExpensesTable(rows);
-    // bind actions
     for (const r of rows) {
-      const delBtn = document.querySelector(`[data-exp-del="${r.id}"]`);
-      if (delBtn) delBtn.onclick = () => deleteExpense(r.id, r.receipt_path);
-      const viewBtn = document.querySelector(`[data-exp-view="${r.id}"]`);
-      if (viewBtn) viewBtn.onclick = () => openReceipt(r.receipt_path);
+      const delBtn = document.querySelector(`[data-exp-del="${r.id}"]`); if (delBtn) delBtn.onclick = () => deleteExpense(r.id, r.receipt_path);
+      const viewBtn = document.querySelector(`[data-exp-view="${r.id}"]`); if (viewBtn) viewBtn.onclick = () => openReceipt(r.receipt_path);
     }
   }
 
   function renderExpensesTable(rows) {
     if (!rows.length) return `<div class="muted">Aucune dépense sur la période.</div>`;
-
-    const trs = rows.map(r => {
-      const date = esc(r.expense_date);
-      const cat = esc(r.category);
-      const note = esc(r.note || "");
-      const amt = eur(r.amount_cents);
-      const hasReceipt = !!r.receipt_path;
-
-      return `
-        <tr>
-          <td>${date}</td>
-          <td>${cat}</td>
-          <td>${note ? `<div>${note}</div>` : `<span class="muted">—</span>`}</td>
-          <td style="white-space:nowrap; font-weight:900;">${amt}</td>
-          <td style="white-space:nowrap;">
-            ${hasReceipt ? `<button class="mini" data-exp-view="${r.id}">Voir</button>` : `<span class="muted">—</span>`}
-            <button class="mini" data-exp-del="${r.id}">Suppr.</button>
-          </td>
-        </tr>
-      `;
-    }).join("");
-
-    return `
-      <table>
-        <thead>
-          <tr>
-            <th>Date</th>
-            <th>Catégorie</th>
-            <th>Note</th>
-            <th>Montant</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>${trs}</tbody>
-      </table>
-    `;
+    const trs = rows.map(r => `<tr>
+      <td>${esc(r.expense_date)}</td><td>${esc(r.category)}</td>
+      <td>${r.note?`<div>${esc(r.note)}</div>`:`<span class="muted">—</span>`}</td>
+      <td style="white-space:nowrap;font-weight:900;">${eur(r.amount_cents)}</td>
+      <td style="white-space:nowrap;">${r.receipt_path?`<button class="mini" data-exp-view="${r.id}">Voir</button>`:`<span class="muted">—</span>`} <button class="mini" data-exp-del="${r.id}">Suppr.</button></td>
+    </tr>`).join("");
+    return `<table><thead><tr><th>Date</th><th>Catégorie</th><th>Note</th><th>Montant</th><th>Actions</th></tr></thead><tbody>${trs}</tbody></table>`;
   }
 
   async function openReceipt(path) {
     if (!path) return;
-    // bucket public → url publique
     const pub = supabase.storage.from("receipts").getPublicUrl(path);
     const url = pub?.data?.publicUrl;
     if (!url) { alert("Impossible d'ouvrir le scan."); return; }
@@ -1207,273 +687,135 @@ if (!session) {
 
   async function deleteExpense(id, receipt_path) {
     if (!confirm("Supprimer cette dépense ?")) return;
-
     setStatus("Suppression…");
-
     const del = await supabase.from("expenses").delete().eq("id", id);
-
-    setStatus("");
-
-    if (del.error) { alert("Erreur suppression: " + del.error.message); return; }
-
-    // Suppression du fichier (best effort)
-    if (receipt_path) {
-      await supabase.storage.from("receipts").remove([receipt_path]);
-    }
-
-    await refreshExpenses();
-    await refreshResults();
+    setStatus(""); if (del.error) { alert("Erreur: "+del.error.message); return; }
+    if (receipt_path) await supabase.storage.from("receipts").remove([receipt_path]);
+    await refreshExpenses(); await refreshResults();
   }
 
-  // ---- RESULTS
   $("refreshResults").onclick = refreshResults;
-
   async function refreshResults() {
-    const from = $("resFrom").value || addDaysISO(isoDate(), -30);
-    const to   = $("resTo").value || isoDate();
-
+    const from = $("resFrom").value||addDaysISO(isoDate(),-30), to = $("resTo").value||isoDate();
     setStatus("Calcul résultats…");
-
-    const del = await supabase
-      .from("deliveries")
-      .select("date_fabrication, product_id, qty_depose")
-      .gte("date_fabrication", from)
-      .lte("date_fabrication", to);
-
-    const exp = await supabase
-      .from("expenses")
-      .select("expense_date, amount_cents, category")
-      .gte("expense_date", from)
-      .lte("expense_date", to);
-
-    setStatus("");
-
-    if (del.error) { alert("Erreur deliveries: " + del.error.message); return; }
-    if (exp.error) { alert("Erreur expenses: " + exp.error.message); return; }
-
-    const prodByIdAll = Object.fromEntries(products.map(p => [p.id, p]));
-
-    let deliveredPieces = 0, revenueCents = 0;
-    for (const r of (del.data || [])) {
-      deliveredPieces += Number(r.qty_depose||0);
-      const p = prodByIdAll[r.product_id];
-      if (p) revenueCents += Number(r.qty_depose||0) * Number(p.price_cents||0);
-    }
-
-    let expenseCents = 0;
-    const byCat = new Map();
-    for (const r of (exp.data || [])) {
-      const a = Number(r.amount_cents || 0);
-      expenseCents += a;
-      const c = String(r.category || "Divers");
-      byCat.set(c, (byCat.get(c) || 0) + a);
-    }
-
-    const net = revenueCents - expenseCents;
-
-    $("resCA").textContent = eur(revenueCents);
-    $("resExp").textContent = eur(expenseCents);
-    $("resNet").textContent = eur(net);
-    $("resPieces").textContent = `${deliveredPieces} pièces livrées sur la période.`;
-
-    // Breakdown par catégorie
-    const cats = Array.from(byCat.entries()).sort((a,b)=>b[1]-a[1]);
-    if (!cats.length) {
-      $("resByCategory").innerHTML = `<div class="muted">Aucune dépense sur la période.</div>`;
-    } else {
-      $("resByCategory").innerHTML = `
-        <table>
-          <thead><tr><th>Dépenses par catégorie</th><th style="text-align:right;">Total</th></tr></thead>
-          <tbody>
-            ${cats.map(([c,v])=>`<tr><td>${esc(c)}</td><td style="text-align:right; font-weight:900;">${eur(v)}</td></tr>`).join("")}
-          </tbody>
-        </table>
-      `;
-    }
+    const del = await supabase.from("deliveries").select("date_fabrication,product_id,qty_depose").gte("date_fabrication",from).lte("date_fabrication",to);
+    const exp = await supabase.from("expenses").select("expense_date,amount_cents,category").gte("expense_date",from).lte("expense_date",to);
+    setStatus(""); if (del.error||exp.error) { alert("Erreur chargement résultats"); return; }
+    const prodByIdAll = Object.fromEntries(products.map(p=>[p.id,p]));
+    let deliveredPieces=0, revenueCents=0;
+    for (const r of (del.data||[])) { deliveredPieces+=Number(r.qty_depose||0); const p=prodByIdAll[r.product_id]; if (p) revenueCents+=Number(r.qty_depose||0)*Number(p.price_cents||0); }
+    let expenseCents=0; const byCat=new Map();
+    for (const r of (exp.data||[])) { const a=Number(r.amount_cents||0); expenseCents+=a; const c=String(r.category||"Divers"); byCat.set(c,(byCat.get(c)||0)+a); }
+    $("resCA").textContent=eur(revenueCents); $("resExp").textContent=eur(expenseCents); $("resNet").textContent=eur(revenueCents-expenseCents);
+    $("resPieces").textContent=`${deliveredPieces} pièces livrées sur la période.`;
+    const cats=Array.from(byCat.entries()).sort((a,b)=>b[1]-a[1]);
+    $("resByCategory").innerHTML=!cats.length?`<div class="muted">Aucune dépense sur la période.</div>`
+      :`<table><thead><tr><th>Dépenses par catégorie</th><th style="text-align:right;">Total</th></tr></thead><tbody>${cats.map(([c,v])=>`<tr><td>${esc(c)}</td><td style="text-align:right;font-weight:900;">${eur(v)}</td></tr>`).join("")}</tbody></table>`;
   }
 
-  // ---- SETTINGS (CRUD léger)
   $("saveSettings").onclick = saveSettingsLocal;
   $("btnAddLoc").onclick = addLocation;
   $("btnAddProd").onclick = addProduct;
   $("btnReloadAll").onclick = async () => { await reloadAllData(); };
 
   async function addLocation(){
-    const name = $("newLocName").value.trim();
-    const sort = toInt($("newLocSort").value, 9999);
+    const name=$("newLocName").value.trim(), sort=toInt($("newLocSort").value,9999);
     if (!name) { alert("Nom du lieu obligatoire."); return; }
-
     setStatus("Ajout lieu…");
-    const res = await supabase.from("locations").insert({ name, sort_order: sort, is_active: true });
-    setStatus("");
-    if (res.error) { alert("Erreur: " + res.error.message); return; }
-
-    $("newLocName").value = "";
-    $("newLocSort").value = "";
-
-    alert("Lieu ajouté ✅");
-    await reloadAllData();
+    const res = await supabase.from("locations").insert({ name, sort_order:sort, is_active:true });
+    setStatus(""); if (res.error) { alert("Erreur: "+res.error.message); return; }
+    $("newLocName").value=""; $("newLocSort").value=""; alert("Lieu ajouté ✅"); await reloadAllData();
   }
 
   async function addProduct(){
-    const name = $("newProdName").value.trim();
-    const price_cents = toEuroStringToCents($("newProdPrice").value);
-    const sort = toInt($("newProdSort").value, 9999);
-
+    const name=$("newProdName").value.trim(), price_cents=toEuroStringToCents($("newProdPrice").value), sort=toInt($("newProdSort").value,9999);
     if (!name) { alert("Nom du sandwich obligatoire."); return; }
-    if (price_cents === null) { alert("Prix invalide."); return; }
-
+    if (price_cents===null) { alert("Prix invalide."); return; }
     setStatus("Ajout sandwich…");
-    const res = await supabase.from("products").insert({ name, price_cents, sort_order: sort, is_active: true });
-    setStatus("");
-    if (res.error) { alert("Erreur: " + res.error.message); return; }
-
-    $("newProdName").value = "";
-    $("newProdPrice").value = "";
-    $("newProdSort").value = "";
-
-    alert("Sandwich ajouté ✅");
-    await reloadAllData();
+    const res = await supabase.from("products").insert({ name, price_cents, sort_order:sort, is_active:true });
+    setStatus(""); if (res.error) { alert("Erreur: "+res.error.message); return; }
+    $("newProdName").value=""; $("newProdPrice").value=""; $("newProdSort").value=""; alert("Sandwich ajouté ✅"); await reloadAllData();
   }
 
-  async function setLocationActive(id, is_active){
-    setStatus("Mise à jour…");
-    const res = await supabase.from("locations").update({ is_active }).eq("id", id);
-    setStatus("");
-    if (res.error) { alert("Erreur: " + res.error.message); return; }
-    await reloadAllData();
-  }
-  async function setProductActive(id, is_active){
-    setStatus("Mise à jour…");
-    const res = await supabase.from("products").update({ is_active }).eq("id", id);
-    setStatus("");
-    if (res.error) { alert("Erreur: " + res.error.message); return; }
-    await reloadAllData();
-  }
+  async function setLocationActive(id, is_active){ setStatus("Mise à jour…"); const res=await supabase.from("locations").update({is_active}).eq("id",id); setStatus(""); if (res.error){alert("Erreur: "+res.error.message);return;} await reloadAllData(); }
+  async function setProductActive(id, is_active){ setStatus("Mise à jour…"); const res=await supabase.from("products").update({is_active}).eq("id",id); setStatus(""); if (res.error){alert("Erreur: "+res.error.message);return;} await reloadAllData(); }
 
   async function updateLocation(id){
-    const name = $("locName:"+id).value.trim();
-    const sort = toInt($("locSort:"+id).value, 9999);
-    if (!name) { alert("Nom obligatoire."); return; }
-
-    setStatus("Sauvegarde…");
-    const res = await supabase.from("locations").update({ name, sort_order: sort }).eq("id", id);
-    setStatus("");
-    if (res.error) { alert("Erreur: " + res.error.message); return; }
-    await reloadAllData();
+    const name=$("locName:"+id).value.trim(), sort=toInt($("locSort:"+id).value,9999);
+    if (!name){alert("Nom obligatoire.");return;}
+    setStatus("Sauvegarde…"); const res=await supabase.from("locations").update({name,sort_order:sort}).eq("id",id); setStatus(""); if (res.error){alert("Erreur: "+res.error.message);return;} await reloadAllData();
   }
 
   async function updateProduct(id){
-    const name = $("prodName:"+id).value.trim();
-    const sort = toInt($("prodSort:"+id).value, 9999);
-    const price_cents = toEuroStringToCents($("prodPrice:"+id).value);
-    if (!name) { alert("Nom obligatoire."); return; }
-    if (price_cents === null) { alert("Prix invalide."); return; }
-
-    setStatus("Sauvegarde…");
-    const res = await supabase.from("products").update({ name, sort_order: sort, price_cents }).eq("id", id);
-    setStatus("");
-    if (res.error) { alert("Erreur: " + res.error.message); return; }
-    await reloadAllData();
+    const name=$("prodName:"+id).value.trim(), sort=toInt($("prodSort:"+id).value,9999), price_cents=toEuroStringToCents($("prodPrice:"+id).value);
+    if (!name){alert("Nom obligatoire.");return;} if (price_cents===null){alert("Prix invalide.");return;}
+    setStatus("Sauvegarde…"); const res=await supabase.from("products").update({name,sort_order:sort,price_cents}).eq("id",id); setStatus(""); if (res.error){alert("Erreur: "+res.error.message);return;} await reloadAllData();
   }
 
   async function refreshSettingsLists(){
-    // Lieux (tout)
     const locHtml = locations.length
-      ? locations
-          .slice().sort((a,b)=> toInt(a.sort_order,9999)-toInt(b.sort_order,9999))
-          .map(l => `
-            <div class="card" style="margin-top:10px;">
-              <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
-                <div style="font-weight:900;">${esc(l.name)}</div>
-                ${l.is_active ? "" : `<span class="badgeOff">inactif</span>`}
-                <div style="flex:1;"></div>
-                <button class="mini" data-action="toggleLoc" data-id="${l.id}" data-active="${l.is_active ? "1":"0"}">
-                  ${l.is_active ? "Désactiver" : "Activer"}
-                </button>
-              </div>
-              <div class="spacer"></div>
-              <div class="grid2">
-                <input id="locName:${l.id}" type="text" value="${esc(l.name)}" />
-                <input id="locSort:${l.id}" type="number" value="${toInt(l.sort_order,9999)}" />
-              </div>
-              <button class="cta" data-action="saveLoc" data-id="${l.id}">Sauvegarder</button>
+      ? locations.slice().sort((a,b)=>toInt(a.sort_order,9999)-toInt(b.sort_order,9999)).map(l=>`
+          <div class="card" style="margin-top:10px;">
+            <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+              <div style="font-weight:900;">${esc(l.name)}</div>
+              ${l.is_active?"":` <span class="badgeOff">inactif</span>`}
+              <div style="flex:1;"></div>
+              <button class="mini" data-action="toggleLoc" data-id="${l.id}" data-active="${l.is_active?"1":"0"}">${l.is_active?"Désactiver":"Activer"}</button>
             </div>
-          `).join("")
+            <div class="spacer"></div>
+            <div class="grid2"><input id="locName:${l.id}" type="text" value="${esc(l.name)}" /><input id="locSort:${l.id}" type="number" value="${toInt(l.sort_order,9999)}" /></div>
+            <button class="cta" data-action="saveLoc" data-id="${l.id}">Sauvegarder</button>
+          </div>`).join("")
       : `<div class="muted">Aucun lieu.</div>`;
 
-    // Produits (tout)
     const prodHtml = products.length
-      ? products
-          .slice().sort((a,b)=> toInt(a.sort_order,9999)-toInt(b.sort_order,9999))
-          .map(p => `
-            <div class="card" style="margin-top:10px;">
-              <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
-                <div style="font-weight:900;">${esc(p.name)}</div>
-                ${p.is_active ? "" : `<span class="badgeOff">inactif</span>`}
-                <div class="muted">— <b>${eur(p.price_cents)}</b></div>
-                <div style="flex:1;"></div>
-                <button class="mini" data-action="toggleProd" data-id="${p.id}" data-active="${p.is_active ? "1":"0"}">
-                  ${p.is_active ? "Désactiver" : "Activer"}
-                </button>
-              </div>
-              <div class="spacer"></div>
-              <div class="grid2">
-                <input id="prodName:${p.id}" type="text" value="${esc(p.name)}" />
-                <input id="prodPrice:${p.id}" type="text" value="${(Number(p.price_cents||0)/100).toFixed(2).replace(".", ",")}" />
-              </div>
-              <div class="spacer"></div>
-              <input id="prodSort:${p.id}" type="number" value="${toInt(p.sort_order,9999)}" />
-              <button class="cta" data-action="saveProd" data-id="${p.id}">Sauvegarder</button>
+      ? products.slice().sort((a,b)=>toInt(a.sort_order,9999)-toInt(b.sort_order,9999)).map(p=>`
+          <div class="card" style="margin-top:10px;">
+            <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+              <div style="font-weight:900;">${esc(p.name)}</div>
+              ${p.is_active?"":` <span class="badgeOff">inactif</span>`}
+              <div class="muted">— <b>${eur(p.price_cents)}</b></div>
+              <div style="flex:1;"></div>
+              <button class="mini" data-action="toggleProd" data-id="${p.id}" data-active="${p.is_active?"1":"0"}">${p.is_active?"Désactiver":"Activer"}</button>
             </div>
-          `).join("")
+            <div class="spacer"></div>
+            <div class="grid2"><input id="prodName:${p.id}" type="text" value="${esc(p.name)}" /><input id="prodPrice:${p.id}" type="text" value="${(Number(p.price_cents||0)/100).toFixed(2).replace(".",",")}" /></div>
+            <div class="spacer"></div>
+            <input id="prodSort:${p.id}" type="number" value="${toInt(p.sort_order,9999)}" />
+            <button class="cta" data-action="saveProd" data-id="${p.id}">Sauvegarder</button>
+          </div>`).join("")
       : `<div class="muted">Aucun sandwich.</div>`;
 
     $("settingsLocList").innerHTML = locHtml;
     $("settingsProdList").innerHTML = prodHtml;
 
-    // bind buttons (event delegation)
     $("settingsLocList").querySelectorAll("[data-action]").forEach(btn => {
       btn.onclick = async () => {
-        const action = btn.dataset.action;
-        const id = btn.dataset.id;
-        if (action === "toggleLoc"){
-          const active = btn.dataset.active === "1";
-          await setLocationActive(id, !active);
-        }
-        if (action === "saveLoc"){
-          await updateLocation(id);
-        }
+        const {action,id,active} = btn.dataset;
+        if (action==="toggleLoc") await setLocationActive(id, active!=="1");
+        if (action==="saveLoc") await updateLocation(id);
       };
     });
-
     $("settingsProdList").querySelectorAll("[data-action]").forEach(btn => {
       btn.onclick = async () => {
-        const action = btn.dataset.action;
-        const id = btn.dataset.id;
-        if (action === "toggleProd"){
-          const active = btn.dataset.active === "1";
-          await setProductActive(id, !active);
-        }
-        if (action === "saveProd"){
-          await updateProduct(id);
-        }
+        const {action,id,active} = btn.dataset;
+        if (action==="toggleProd") await setProductActive(id, active!=="1");
+        if (action==="saveProd") await updateProduct(id);
       };
     });
   }
 
-// Boot
-try {
-  loadSettings();
-  setStatus("Connecté ✅");
-
-  await reloadAllData();
-  await refreshWithdraw();
-  await refreshHistory();
-} catch (e) {
-  alert("Erreur init: " + (e?.message || e));
-}
-
+  // Boot
+  try {
+    loadSettings();
+    setStatus("Connecté ✅");
+    await reloadAllData();
+    await refreshWithdraw();
+    await refreshHistory();
+  } catch(e) {
+    alert("Erreur init: " + (e?.message || e));
+  }
 </script>
+
 </body>
 </html>
