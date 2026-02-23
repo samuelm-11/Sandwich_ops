@@ -454,7 +454,7 @@ if (!session) {
   $("closeDrawer").onclick = closeDrawer;
   overlay.onclick = closeDrawer;
 
-  const navitems = document.querySelectorAll(".navitem");
+  const navitems = document.querySelectorAll('.navitem[data-tab]');
   const sections = {
     today: $("tab-today"),
     delivery: $("tab-delivery"),
