@@ -111,13 +111,13 @@
         <div style="font-weight:900;">À retirer aujourd'hui (résumé)</div>
         <div class="muted">Basé sur la vue v_delivery_remaining (Supabase).</div>
         <div class="spacer"></div>
-        <div id="todayWithdrawSummary" class="muted">—</div>
+        <div id="todayWithdrawSummary" class="muted">-</div>
         <div class="spacer"></div>
         <button class="smallbtn" id="gotoWithdraw">Gérer les retraits</button>
       </div>
     </section>
 
-```
+
 <!-- ─── Onglet : Livraison ────────────────────────────────────────────── -->
 <section class="section" id="tab-delivery">
   <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
@@ -187,7 +187,7 @@
           <option value="Divers">Divers</option>
         </select>
       </label>
-      <label class="field"><div class="label">Note (optionnel)</div><input type="text" placeholder="ex: parking 2h / facture Metro…" id="expNote" /></label>
+      <label class="field"><div class="label">Note (optionnel)</div><input type="text" placeholder="ex: parking 2h / facture Metro..." id="expNote" /></label>
       <label class="field" style="grid-column:1 / -1;"><div class="label">Scan / photo (optionnel)</div><input type="file" id="expReceipt" accept="image/*" /></label>
     </div>
     <div style="display:flex; gap:8px; margin-top:12px; flex-wrap:wrap;">
@@ -212,7 +212,7 @@
 <!-- ─── Onglet : Résultats ───────────────────────────────────────────── -->
 <section class="section" id="tab-results">
   <div class="card">
-    <div style="font-weight:900;">Résultats (CA – Dépenses)</div>
+    <div style="font-weight:900;">Résultats (CA - Dépenses)</div>
     <div class="muted">Basé sur deliveries (CA) et expenses (dépenses).</div>
     <div style="display:flex; gap:8px; align-items:end; flex-wrap:wrap; margin-top:10px;">
       <label class="field" style="min-width:160px;"><div class="label">Du</div><input type="date" id="resFrom" /></label>
@@ -223,7 +223,7 @@
     <div class="kv"><div>CA (livraisons)</div><div id="resCA" style="font-weight:900;">0,00€</div></div>
     <div class="kv"><div>Dépenses</div><div id="resExp" style="font-weight:900;">0,00€</div></div>
     <div class="kv"><div>Bénéfice net</div><div id="resNet" style="font-weight:900;">0,00€</div></div>
-    <div class="muted" style="margin-top:10px;" id="resPieces">—</div>
+    <div class="muted" style="margin-top:10px;" id="resPieces">-</div>
     <div id="resByCategory" style="margin-top:10px;"></div>
   </div>
 </section>
@@ -297,7 +297,7 @@
       <div><input type="number" id="setDlc" value="2" style="width:110px;"></div>
     </div>
     <div class="row" style="margin-top:10px;">
-      <div><div class="name">Retrait à partir de</div><div class="sub">J + …</div></div>
+      <div><div class="name">Retrait à partir de</div><div class="sub">J + ...</div></div>
       <div><input type="number" id="setWithdrawJ" value="3" style="width:110px;"></div>
     </div>
     <button class="cta" id="saveSettings">Sauvegarder (local)</button>
@@ -314,7 +314,7 @@
       <div style="font-weight:900;">Lieux (actifs & inactifs)</div>
       <div class="muted">Tu peux modifier nom/ordre et activer/désactiver.</div>
       <div class="spacer"></div>
-      <div id="settingsLocList" class="muted">—</div>
+      <div id="settingsLocList" class="muted">-</div>
     </div>
     <div class="card">
       <div style="font-weight:900;">Ajouter un sandwich</div>
@@ -329,11 +329,11 @@
       <div style="font-weight:900;">Sandwichs (actifs & inactifs)</div>
       <div class="muted">Modifier nom/prix/ordre et activer/désactiver.</div>
       <div class="spacer"></div>
-      <div id="settingsProdList" class="muted">—</div>
+      <div id="settingsProdList" class="muted">-</div>
     </div>
   </div>
 </section>
-```
+
 
   </main>
 
