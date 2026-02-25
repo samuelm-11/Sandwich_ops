@@ -1,51 +1,34 @@
 import { supabase } from “./supabase.js”;
-import { $, setStatus, isoDate, loadSettings } from “./ui.js”;
-import { initToday, refreshToday }    from “./today.js”;
+import { $, setStatus, isoDate, loadSettings, goTab } from “./ui.js”;
+import { initToday, refreshToday }                              from “./today.js”;
 import { initDelivery, resetQty, renderLocationPills, renderDeliveryList, updateDeliveryTotals } from “./delivery.js”;
-import { initWithdraw, refreshWithdraw } from “./withdraw.js”;
-import { initHistory, refreshHistory }   from “./history.js”;
-import { initSettings, refreshSettingsLists } from “./settings.js”;
-import { initExpenses, refreshExpenses }  from “./expenses.js”;
-import { initResults, refreshResults }    from “./results.js”;
-import { initShifts, refreshShifts }      from “./shifts.js”;
-import { initKm, refreshKm }              from “./km.js”;
+import { initWithdraw, refreshWithdraw }                        from “./withdraw.js”;
+import { initHistory, refreshHistory }                          from “./history.js”;
+import { initSettings, refreshSettingsLists }                   from “./settings.js”;
+import { initExpenses, refreshExpenses }                        from “./expenses.js”;
+import { initResults, refreshResults }                          from “./results.js”;
+import { initShifts }                                           from “./shifts.js”;
+import { initKm }                                               from “./km.js”;
 
-// ─── État global (partagé entre modules via window.__state) ──────────────────
-window.__state = {
-locations:  [],
-products:   [],
-locationId: “”,
-};
+// ─── État global ─────────────────────────────────────────────────────────────
+window.__state = { locations: [], products: [], locationId: “” };
 
-// ─── Navigation ─────────────────────────────────────────────────────────────
-const TAB_TITLES = {
-today:    “Aujourd’hui”,
-delivery: “Livraison”,
-withdraw: “À retirer”,
-history:  “Historique”,
-expenses: “Dépenses”,
-results:  “Résultats”,
-settings: “Paramètres”,
-shifts:   “Shift”,
-km:       “KM”,
-};
+// ─── Callbacks window (éviter imports circulaires dans les sous-modules)
+window.__refreshToday   = () => refreshToday();
+window.__refreshHistory = () => refreshHistory();
+window.__refreshResults = () => refreshResults();
 
-const drawer  = $(“drawer”);
-const overlay = $(“drawerOverlay”);
-
-function openDrawer()  { drawer.classList.add(“open”);    overlay.classList.add(“open”); }
-function closeDrawer() { drawer.classList.remove(“open”); overlay.classList.remove(“open”); }
-
-export function goTab(tab) {
-closeDrawer();
-document.querySelectorAll(”.navitem[data-tab]”).forEach(b => b.classList.remove(“active”));
-document.querySelector(`.navitem[data-tab="${tab}"]`)?.classList.add(“active”);
-document.querySelectorAll(”.section”).forEach(s => s.classList.remove(“active”));
-document.getElementById(`tab-${tab}`)?.classList.add(“active”);
-$(“title”).textContent = TAB_TITLES[tab] || tab;
+// ─── Drawer ──────────────────────────────────────────────────────────────────
+function openDrawer()  {
+document.getElementById(“drawer”).classList.add(“open”);
+document.getElementById(“drawerOverlay”).classList.add(“open”);
+}
+function closeDrawer() {
+document.getElementById(“drawer”).classList.remove(“open”);
+document.getElementById(“drawerOverlay”).classList.remove(“open”);
 }
 
-// ─── Chargement des données de référence ────────────────────────────────────
+// ─── Données de référence ────────────────────────────────────────────────────
 async function loadRefsFresh() {
 setStatus(“Chargement produits/lieux…”);
 const locRes  = await supabase.from(“locations”).select(“id,name,sort_order,is_active”).order(“sort_order”, { ascending: true });
@@ -76,11 +59,10 @@ await refreshExpenses();
 await refreshResults();
 }
 
-// Exposer pour les modules qui en ont besoin
 window.__reloadAllData = reloadAllData;
 
 function renderQuickPills() {
-const box  = $(“quickLocPills”);
+const box = $(“quickLocPills”);
 box.innerHTML = “”;
 const locs = window.__state.locations.filter(l => l.is_active);
 if (!locs.length) {
@@ -89,7 +71,7 @@ return;
 }
 locs.forEach(l => {
 const b = document.createElement(“button”);
-b.className  = “pill”;
+b.className   = “pill”;
 b.textContent = l.name;
 b.onclick = () => {
 $(“delDate”).value        = $(“dayDate”).value || isoDate();
@@ -103,14 +85,14 @@ box.appendChild(b);
 
 // ─── Boot ────────────────────────────────────────────────────────────────────
 (async () => {
-// Auth
+// Auth guard
 const { data: { session } } = await supabase.auth.getSession();
 if (!session) { window.location.href = “./index.html”; return; }
 
 // Drawer
-$(“openDrawer”).onclick  = openDrawer;
-$(“closeDrawer”).onclick = closeDrawer;
-overlay.onclick          = closeDrawer;
+$(“openDrawer”).onclick    = openDrawer;
+$(“closeDrawer”).onclick   = closeDrawer;
+$(“drawerOverlay”).onclick = closeDrawer;
 
 // Navigation
 document.querySelectorAll(”.navitem[data-tab]”).forEach(b => {
@@ -125,7 +107,7 @@ await supabase.auth.signOut();
 window.location.href = “./index.html”;
 };
 
-// Init des modules
+// Init modules
 loadSettings();
 initToday();
 initDelivery();
