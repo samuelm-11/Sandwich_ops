@@ -1,6 +1,6 @@
 import { supabase } from “./supabase.js”;
 import { $, setStatus, eur, isoDate, addDaysISO, toEuroStringToCents, esc } from “./ui.js”;
-import { refreshResults } from “./results.js”;
+// refreshResults appelé via window pour éviter les imports circulaires
 
 export async function refreshExpenses() {
 const from = $(“expFrom”).value || addDaysISO(isoDate(), -30);
@@ -58,7 +58,7 @@ setStatus(””);
 if (del.error) { alert(“Erreur: “ + del.error.message); return; }
 if (receipt_path) await supabase.storage.from(“receipts”).remove([receipt_path]);
 await refreshExpenses();
-await refreshResults();
+if (window.__refreshResults) await window.__refreshResults();
 }
 
 async function addExpenseFromForm() {
@@ -93,7 +93,7 @@ $(“expAmount”).value  = “”;
 $(“expNote”).value    = “”;
 $(“expReceipt”).value = “”;
 await refreshExpenses();
-await refreshResults();
+if (window.__refreshResults) await window.__refreshResults();
 }
 
 export function initExpenses() {
