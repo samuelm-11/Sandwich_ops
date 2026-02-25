@@ -84,24 +84,25 @@
       <button class="iconbtn" id="closeDrawer">✕</button>
     </div>
 
-```
+
 <div class="navtitle">Navigation</div>
-<!-- Uniquement les boutons de navigation ont data-tab -->
 <button class="navitem" data-tab="today">Aujourd'hui</button>
 <button class="navitem" data-tab="delivery">Livraison</button>
 <button class="navitem" data-tab="withdraw">À retirer</button>
 <button class="navitem" data-tab="history">Historique</button>
-<button class="navitem" data-tab="settings">Paramètres</button>
 <button class="navitem" data-tab="expenses">Dépenses</button>
 <button class="navitem" data-tab="results">Résultats</button>
+<button class="navitem" data-tab="shifts">Shift</button>
+<button class="navitem" data-tab="km">KM</button>
+
+<button class="navitem" data-tab="settings">Paramètres</button>
 
 <div style="flex:1;"></div>
-
-<!-- Déconnexion en bas du drawer, style rouge, SANS classe navitem -->
 <button id="logoutBtn">⎋ Déconnexion</button>
-
 <div class="muted">Astuce: change la date, choisis le lieu, "Charger depuis Supabase", modifie, puis "Enregistrer ce lieu".</div>
-```
+<div style="flex:1;"></div>
+
+
 
   </aside>
 
@@ -142,7 +143,7 @@
       </div>
     </section>
 
-```
+
 <section class="section" id="tab-delivery">
   <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
     <div class="muted">Jour :</div>
@@ -190,6 +191,61 @@
   <div id="histList"></div>
 </section>
 
+
+<!-- ─── Onglet : Shift ───────────────────────────────────────────────── -->
+<section class="section" id="tab-shifts">
+  <div class="card">
+    <div style="font-weight:900;">Ajouter un shift</div>
+    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px; margin-top:10px;">
+      <label class="field"><div class="label">Date</div><input type="date" id="shiftDate" /></label>
+      <label class="field"><div class="label">Note (optionnel)</div><input type="text" id="shiftNote" placeholder="ex: Avia + Leclerc" /></label>
+      <label class="field"><div class="label">Heure début</div><input type="time" id="shiftStart" /></label>
+      <label class="field"><div class="label">Heure fin</div><input type="time" id="shiftEnd" /></label>
+    </div>
+    <button class="cta" id="addShiftBtn">Ajouter le shift</button>
+  </div>
+
+  <div class="card">
+    <div style="font-weight:900;">Journal des shifts</div>
+    <div style="display:flex; gap:8px; align-items:end; flex-wrap:wrap; margin-top:10px;">
+      <label class="field" style="min-width:160px;"><div class="label">Du</div><input type="date" id="shiftFrom" /></label>
+      <label class="field" style="min-width:160px;"><div class="label">Au</div><input type="date" id="shiftTo" /></label>
+      <button class="smallbtn" id="refreshShifts">Rafraîchir</button>
+    </div>
+    <div class="spacer"></div>
+    <div class="kv"><div>Total heures</div><div id="shiftTotal" style="font-weight:900;">0h00</div></div>
+    <div id="shiftList" style="margin-top:10px;"></div>
+  </div>
+</section>
+
+<!-- ─── Onglet : KM ──────────────────────────────────────────────────── -->
+<section class="section" id="tab-km">
+  <div class="card">
+    <div style="font-weight:900;">Ajouter un trajet</div>
+    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px; margin-top:10px;">
+      <label class="field"><div class="label">Date</div><input type="date" id="kmDate" /></label>
+      <label class="field"><div class="label">Taux (€/km, ex: 0,42)</div><input type="text" id="kmRate" placeholder="0,42" /></label>
+      <label class="field"><div class="label">Km départ</div><input type="number" id="kmStart" placeholder="ex: 45000" /></label>
+      <label class="field"><div class="label">Km arrivée</div><input type="number" id="kmEnd" placeholder="ex: 45087" /></label>
+      <label class="field" style="grid-column:1/-1;"><div class="label">Note (optionnel)</div><input type="text" id="kmNote" placeholder="ex: tournée Avia + Leclerc" /></label>
+    </div>
+    <button class="cta" id="addKmBtn">Ajouter le trajet</button>
+  </div>
+
+  <div class="card">
+    <div style="font-weight:900;">Journal kilométrique</div>
+    <div style="display:flex; gap:8px; align-items:end; flex-wrap:wrap; margin-top:10px;">
+      <label class="field" style="min-width:160px;"><div class="label">Du</div><input type="date" id="kmFrom" /></label>
+      <label class="field" style="min-width:160px;"><div class="label">Au</div><input type="date" id="kmTo" /></label>
+      <button class="smallbtn" id="refreshKm">Rafraîchir</button>
+    </div>
+    <div class="spacer"></div>
+    <div class="kv"><div>Total km</div><div id="kmTotal" style="font-weight:900;">0 km</div></div>
+    <div class="kv"><div>Remboursement estimé</div><div id="kmReimb" style="font-weight:900;">0,00€</div></div>
+    <div id="kmList" style="margin-top:10px;"></div>
+  </div>
+</section>
+    
 <section class="section" id="tab-settings">
   <div class="card">
     <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
@@ -300,7 +356,7 @@
     <div id="resByCategory" style="margin-top:10px;"></div>
   </div>
 </section>
-```
+
 
   </main>
 
@@ -356,19 +412,34 @@
   overlay.onclick = closeDrawer;
 
   // ✅ Sélecteur strict : uniquement les boutons avec data-tab
-  const navitems = document.querySelectorAll('.navitem[data-tab]');
   const sections = {
-    today: $("tab-today"), delivery: $("tab-delivery"), withdraw: $("tab-withdraw"),
-    history: $("tab-history"), settings: $("tab-settings"), expenses: $("tab-expenses"), results: $("tab-results"),
-  };
+  today: $("tab-today"),
+  delivery: $("tab-delivery"),
+  withdraw: $("tab-withdraw"),
+  history: $("tab-history"),
+  expenses: $("tab-expenses"),
+  results: $("tab-results"),
+  shifts: $("tab-shifts"), // ✅ AJOUT
+  km: $("tab-km"),         // ✅ AJOUT
+  settings: $("tab-settings"),
+};
 
   function goTab(tab) {
     closeDrawer();
     navitems.forEach(b => b.classList.remove("active"));
     document.querySelector(`.navitem[data-tab="${tab}"]`)?.classList.add("active");
     Object.entries(sections).forEach(([k, sec]) => sec.classList.toggle("active", k === tab));
-    title.textContent = ({ today:"Aujourd'hui", delivery:"Livraison", withdraw:"À retirer", history:"Historique", expenses:"Dépenses", results:"Résultats", settings:"Paramètres" })[tab] || tab;
-  }
+  title.textContent = ({
+  today:"Aujourd'hui",
+  delivery:"Livraison",
+  withdraw:"À retirer",
+  history:"Historique",
+  expenses:"Dépenses",
+  results:"Résultats",
+  shifts:"Shift",  // ✅
+  km:"KM",         // ✅
+  settings:"Paramètres"
+})[tab] || tab;
 
   // Onglet actif au démarrage
   document.querySelector('.navitem[data-tab="today"]').classList.add("active");
