@@ -10,6 +10,25 @@ import { initResults, refreshResults }                          from "./results.
 import { initShifts }                                           from "./shifts.js";
 import { initKm }                                               from "./km.js";
 
+
+
+const dbg = (msg) => {
+  const el = document.getElementById("debug");
+  if (el) el.textContent = msg;
+};
+
+window.addEventListener("error", (e) => {
+  dbg("JS error: " + (e?.message || e));
+  alert("JS error: " + (e?.message || e));
+});
+
+window.addEventListener("unhandledrejection", (e) => {
+  const m = e?.reason?.message || String(e?.reason || e);
+  dbg("Promise error: " + m);
+  alert("Promise error: " + m);
+});
+
+dbg("app.js chargé ✅");
 // ─── État global ─────────────────────────────────────────────────────────────
 window.__state = { locations: [], products: [], locationId: "" };
 
