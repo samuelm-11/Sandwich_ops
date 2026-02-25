@@ -4,7 +4,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <title>Sandwich Ops — Login</title>
+  <title>Sandwich Ops - Login</title>
   <style>
     :root { --border:#eee; --text:#111; --muted:rgba(17,17,17,.7); }
     body { font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; margin:0; background:#fff; color:var(--text); }
@@ -21,7 +21,7 @@
 <body>
   <div class="wrap">
     <div class="card">
-      <div style="font-weight:900; font-size:20px;">Sandwich Ops — Connexion</div>
+      <div style="font-weight:900; font-size:20px;">Sandwich Ops - Connexion</div>
       <div class="muted" style="margin-top:6px;">Accès réservé (Supabase Auth).</div>
       <div class="field">
         <div class="label">Email</div>
@@ -51,7 +51,7 @@
       const password = ($("password").value || "").trim();
       if (!email || !password) { $("msg").textContent = "Email et mot de passe requis."; return; }
       $("loginBtn").disabled = true;
-      $("msg").textContent   = "Connexion…";
+      $("msg").textContent   = "Connexion...";
       const { error } = await supabase.auth.signInWithPassword({ email, password });
       $("loginBtn").disabled = false;
       if (error) { $("msg").textContent = "Erreur: " + error.message; return; }
