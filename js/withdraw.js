@@ -1,7 +1,6 @@
 import { supabase } from “./supabase.js”;
 import { $, setStatus, isoDate, toInt, esc } from “./ui.js”;
-import { refreshHistory } from “./history.js”;
-import { refreshToday } from “./today.js”;
+// refreshHistory et refreshToday appelés via window pour éviter les imports circulaires
 
 let lastDueList         = null;
 let withdrawQtyByDelivery = {};
@@ -118,8 +117,8 @@ setStatus(””);
 if (ins.error) { alert(“Erreur: “ + ins.error.message); return; }
 alert(“Retraits enregistrés ✅”);
 await refreshWithdraw();
-await refreshToday();
-await refreshHistory();
+if (window.__refreshToday)   await window.__refreshToday();
+if (window.__refreshHistory) await window.__refreshHistory();
 }
 
 export function initWithdraw() {
