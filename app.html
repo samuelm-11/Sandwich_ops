@@ -411,39 +411,49 @@
   $("closeDrawer").onclick = closeDrawer;
   overlay.onclick = closeDrawer;
 
-  // ✅ Sélecteur strict : uniquement les boutons avec data-tab
+   // ✅ Sélecteur strict : uniquement les boutons avec data-tab
   const sections = {
-  today: $("tab-today"),
-  delivery: $("tab-delivery"),
-  withdraw: $("tab-withdraw"),
-  history: $("tab-history"),
-  expenses: $("tab-expenses"),
-  results: $("tab-results"),
-  shifts: $("tab-shifts"), // ✅ AJOUT
-  km: $("tab-km"),         // ✅ AJOUT
-  settings: $("tab-settings"),
-};
+    today: $("tab-today"),
+    delivery: $("tab-delivery"),
+    withdraw: $("tab-withdraw"),
+    history: $("tab-history"),
+    expenses: $("tab-expenses"),
+    results: $("tab-results"),
+    shifts: $("tab-shifts"),
+    km: $("tab-km"),
+    settings: $("tab-settings"),
+  };
+
+  // ✅ Déclare navitems une seule fois
+  const navitems = Array.from(document.querySelectorAll('.navitem[data-tab]'));
 
   function goTab(tab) {
     closeDrawer();
+
     navitems.forEach(b => b.classList.remove("active"));
     document.querySelector(`.navitem[data-tab="${tab}"]`)?.classList.add("active");
-    Object.entries(sections).forEach(([k, sec]) => sec.classList.toggle("active", k === tab));
-  title.textContent = ({
-  today:"Aujourd'hui",
-  delivery:"Livraison",
-  withdraw:"À retirer",
-  history:"Historique",
-  expenses:"Dépenses",
-  results:"Résultats",
-  shifts:"Shift",  // ✅
-  km:"KM",         // ✅
-  settings:"Paramètres"
-})[tab] || tab;
 
-  // Onglet actif au démarrage
-  document.querySelector('.navitem[data-tab="today"]').classList.add("active");
+    Object.entries(sections).forEach(([k, sec]) => {
+      sec.classList.toggle("active", k === tab);
+    });
+
+    title.textContent = ({
+      today: "Aujourd'hui",
+      delivery: "Livraison",
+      withdraw: "À retirer",
+      history: "Historique",
+      expenses: "Dépenses",
+      results: "Résultats",
+      shifts: "Shift",
+      km: "KM",
+      settings: "Paramètres"
+    })[tab] || tab;
+  } // ✅ IMPORTANT : on ferme bien la fonction
+
+  // ✅ Onglet actif au démarrage + listeners
+  goTab("today");
   navitems.forEach(b => b.addEventListener("click", () => goTab(b.dataset.tab)));
+  // Onglet actif au démarrage
 
   let locations = [], products = [], locationId = "";
   let qtyByProduct = {}, withdrawQtyByDelivery = {}, remainingByDelivery = {}, lastDueList = null;
