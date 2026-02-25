@@ -1,6 +1,5 @@
 import { supabase } from “./supabase.js”;
-import { $, setStatus, eur, isoDate, toInt, esc } from “./ui.js”;
-import { goTab } from “./app.js”;
+import { $, setStatus, eur, isoDate, toInt, esc, goTab } from “./ui.js”;
 
 export async function refreshToday() {
 await refreshTodayProductionOnly();
