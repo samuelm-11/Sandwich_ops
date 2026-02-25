@@ -1,5 +1,25 @@
 // ─── Utilitaires partagés ───────────────────────────────────────────────────
 
+const TAB_TITLES = {
+today: “Aujourd’hui”, delivery: “Livraison”, withdraw: “À retirer”,
+history: “Historique”, expenses: “Dépenses”, results: “Résultats”,
+settings: “Paramètres”, shifts: “Shift”, km: “KM”,
+};
+
+export function goTab(tab) {
+// Fermer le drawer si ouvert
+document.getElementById(“drawer”)?.classList.remove(“open”);
+document.getElementById(“drawerOverlay”)?.classList.remove(“open”);
+// Nav active
+document.querySelectorAll(”.navitem[data-tab]”).forEach(b => b.classList.remove(“active”));
+document.querySelector(`.navitem[data-tab="${tab}"]`)?.classList.add(“active”);
+// Section active
+document.querySelectorAll(”.section”).forEach(s => s.classList.remove(“active”));
+document.getElementById(`tab-${tab}`)?.classList.add(“active”);
+const titleEl = document.getElementById(“title”);
+if (titleEl) titleEl.textContent = TAB_TITLES[tab] || tab;
+}
+
 export const $ = (id) => document.getElementById(id);
 
 export function setStatus(msg) {
