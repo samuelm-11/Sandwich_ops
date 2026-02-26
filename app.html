@@ -111,12 +111,12 @@
     <button class="navitem" data-tab="delivery" type="button">Livraison</button>
     <button class="navitem" data-tab="withdraw" type="button">À retirer</button>
     <button class="navitem" data-tab="history" type="button">Historique</button>
-    <button class="navitem" data-tab="settings" type="button">Paramètres</button>
+    <button class="navitem" data-tab="shiftkm" type="button">KM & Shifts</button>
     <button class="navitem" data-tab="expenses" type="button">Dépenses</button>
     <button class="navitem" data-tab="results" type="button">Résultats</button>
+    <button class="navitem" data-tab="settings" type="button">Paramètres</button>
 
-    <!-- ✅ AJOUT -->
-    <button class="navitem" data-tab="shiftkm" type="button">KM & Shifts</button>
+    
 
     <div style="flex:1;"></div>
 
@@ -362,68 +362,7 @@
       </div>
     </section>
 
-    <!-- ✅ NOUVEL ONGLET : KM & SHIFTS -->
-    <section class="section" id="tab-shiftkm">
-      <div class="card">
-        <div style="font-weight:900;">Ajouter un shift</div>
-        <div class="muted">Enregistre dans la table <b>shifts</b> (start_ts / end_ts).</div>
-        <div class="spacer"></div>
-
-        <div class="grid3">
-          <label class="field">
-            <div class="label">Début</div>
-            <input type="datetime-local" id="shiftStart">
-          </label>
-
-          <label class="field">
-            <div class="label">Fin</div>
-            <input type="datetime-local" id="shiftEnd">
-          </label>
-
-          <label class="field">
-            <div class="label">Note (optionnel)</div>
-            <input type="text" id="shiftNote" placeholder="ex: tournée Avia/Bierset">
-          </label>
-        </div>
-
-        <button class="cta" id="addShiftBtn" type="button">Ajouter shift</button>
-      </div>
-
-      <div class="card">
-        <div style="font-weight:900;">Ajouter KM</div>
-        <div class="muted">Enregistre dans <b>km_logs</b> (day / odo_start / odo_end).</div>
-        <div class="spacer"></div>
-
-        <div class="grid3">
-          <label class="field">
-            <div class="label">Jour</div>
-            <input type="date" id="kmDay">
-          </label>
-
-          <label class="field">
-            <div class="label">Compteur début</div>
-            <input type="number" id="kmStart" placeholder="ex: 81234">
-          </label>
-
-          <label class="field">
-            <div class="label">Compteur fin</div>
-            <input type="number" id="kmEnd" placeholder="ex: 81295">
-          </label>
-        </div>
-
-        <div class="spacer"></div>
-        <input type="text" id="kmNote" placeholder="Note (optionnel)">
-        <button class="cta" id="addKmBtn" type="button">Ajouter KM</button>
-      </div>
-
-      <div class="card">
-        <div style="font-weight:900;">Résumé (30 derniers jours)</div>
-        <div class="muted">Heures = somme des shifts · KM = somme (odo_end - odo_start).</div>
-        <div class="spacer"></div>
-        <div id="shiftKmSummary" class="muted">—</div>
-        <button class="smallbtn" id="refreshShiftKmBtn" type="button" style="margin-top:10px;">Rafraîchir</button>
-      </div>
-    </section>
+ 
 
   </main>
 
