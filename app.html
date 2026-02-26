@@ -111,7 +111,8 @@
     <button class="navitem" data-tab="delivery" type="button">Livraison</button>
     <button class="navitem" data-tab="withdraw" type="button">À retirer</button>
     <button class="navitem" data-tab="history" type="button">Historique</button>
-    <button class="navitem" data-tab="shiftkm" type="button">KM & Shifts</button>
+    <button class="navitem" data-tab="shift" type="button">Shifts</button>
+    <button class="navitem" data-tab="km" type="button">KM</button>
     <button class="navitem" data-tab="expenses" type="button">Dépenses</button>
     <button class="navitem" data-tab="results" type="button">Résultats</button>
     <button class="navitem" data-tab="settings" type="button">Paramètres</button>
@@ -363,7 +364,27 @@
     </section>
 
  
+<!-- SHIFT -->
+<section class="section" id="shift">
+  <h3>Shift</h3>
+  <input type="date" id="shiftDate"/>
+  <div class="row">
+    <div>Heures travaillées</div>
+    <input type="number" id="shiftHours" step="0.5"/>
+  </div>
+  <button id="saveShift">Enregistrer Shift</button>
+</section>
 
+<!-- KM -->
+<section class="section" id="km">
+  <h3>Kilomètres</h3>
+  <input type="date" id="kmDate"/>
+  <div class="row">
+    <div>Kilomètres</div>
+    <input type="number" id="kmValue"/>
+  </div>
+  <button id="saveKm">Enregistrer KM</button>
+</section>
   </main>
 
   <script type="module">
