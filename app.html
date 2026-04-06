@@ -23,6 +23,7 @@
 
     <button class="navitem" data-tab="today" type="button">Aujourd'hui</button>
     <button class="navitem" data-tab="delivery" type="button">Livraison</button>
+    <button class="navitem" data-tab="stock" type="button">Stock (lots)</button>
     <button class="navitem" data-tab="withdraw" type="button">À retirer</button>
     <button class="navitem" data-tab="history" type="button">Historique</button>
     <button class="navitem" data-tab="settings" type="button">Paramètres</button>
@@ -107,6 +108,77 @@
       </div>
 
       <button class="cta" id="saveLocationBtn" type="button">Enregistrer ce lieu</button>
+    </section>
+
+    <!-- STOCK LOTS -->
+    <section class="section" id="tab-stock">
+      <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
+        <div class="muted">Date de référence :</div>
+        <input type="date" id="stockDateRef" />
+        <select id="stockFilterLocation"></select>
+        <select id="stockFilterProduct"></select>
+      </div>
+
+      <div class="card">
+        <div style="font-weight:900;">Actions terrain</div>
+        <div class="muted">Chaque dépôt crée un lot. Les transferts et retraits travaillent lot par lot (date de fabrication conservée).</div>
+        <div class="spacer"></div>
+
+        <div class="grid3">
+          <div>
+            <div style="font-weight:900; margin-bottom:8px;">Déposer</div>
+            <label class="field"><div class="label">Lieu</div><select id="depositLocation"></select></label>
+            <label class="field"><div class="label">Produit</div><select id="depositProduct"></select></label>
+            <label class="field"><div class="label">Date fabrication</div><input type="date" id="depositFabDate" /></label>
+            <label class="field"><div class="label">Quantité</div><input type="number" id="depositQty" min="1" /></label>
+            <label class="field"><div class="label">Note</div><input type="text" id="depositNote" placeholder="optionnel" /></label>
+            <button class="smallbtn" id="depositBtn" type="button">Déposer</button>
+          </div>
+
+          <div>
+            <div style="font-weight:900; margin-bottom:8px;">Transférer</div>
+            <label class="field"><div class="label">Lieu source</div><select id="transferSource"></select></label>
+            <label class="field"><div class="label">Produit</div><select id="transferProduct"></select></label>
+            <label class="field"><div class="label">Lot source</div><select id="transferLotSource"></select></label>
+            <label class="field"><div class="label">Lieu destination</div><select id="transferDestination"></select></label>
+            <label class="field"><div class="label">Quantité</div><input type="number" id="transferQty" min="1" /></label>
+            <label class="field"><div class="label">Note</div><input type="text" id="transferNote" placeholder="optionnel" /></label>
+            <button class="smallbtn" id="transferBtn" type="button">Transférer</button>
+          </div>
+
+          <div>
+            <div style="font-weight:900; margin-bottom:8px;">Retirer</div>
+            <label class="field"><div class="label">Lieu</div><select id="withdrawLocation"></select></label>
+            <label class="field"><div class="label">Produit</div><select id="withdrawProduct"></select></label>
+            <label class="field"><div class="label">Lot</div><select id="withdrawLot"></select></label>
+            <label class="field"><div class="label">Quantité</div><input type="number" id="withdrawQty" min="1" /></label>
+            <label class="field"><div class="label">Note</div><input type="text" id="withdrawNote" placeholder="optionnel" /></label>
+            <button class="smallbtn" id="withdrawActionBtn" type="button">Retirer</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div style="display:flex; gap:8px; flex-wrap:wrap;">
+          <button class="smallbtn" id="stockImportBtn" type="button">Importer depuis deliveries/withdrawals</button>
+          <button class="smallbtn" id="stockSeedBtn" type="button">Charger jeu de démo</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <div style="font-weight:900;">Stock actuel (par lieu, produit, date de fabrication)</div>
+        <div id="stockCurrentList" style="margin-top:10px;"></div>
+      </div>
+
+      <div class="card">
+        <div style="font-weight:900;">À retirer aujourd'hui / demain</div>
+        <div id="stockDueList" style="margin-top:10px;"></div>
+      </div>
+
+      <div class="card">
+        <div style="font-weight:900;">Historique des mouvements (40 derniers)</div>
+        <div id="stockMovements" style="margin-top:10px;"></div>
+      </div>
     </section>
 
     <!-- WITHDRAW -->
