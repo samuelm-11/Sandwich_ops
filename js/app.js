@@ -9,6 +9,7 @@ import { createHistoryModule } from './modules/history.js';
 import { createExpensesModule } from './modules/expenses.js';
 import { createResultsModule } from './modules/results.js';
 import { createSettingsModule } from './modules/settings.js';
+import { createStockModule } from './modules/stock.js';
 
 const state = { locations: [], products: [], locationId: '', qtyByProduct: {} };
 
@@ -144,7 +145,7 @@ async function boot() {
 
   const sections = {
     today: byId('tab-today'), delivery: byId('tab-delivery'), withdraw: byId('tab-withdraw'), history: byId('tab-history'),
-    settings: byId('tab-settings'), expenses: byId('tab-expenses'), results: byId('tab-results'), shiftkm: byId('tab-shiftkm'),
+    settings: byId('tab-settings'), expenses: byId('tab-expenses'), results: byId('tab-results'), stock: byId('tab-stock'), shiftkm: byId('tab-shiftkm'),
   };
 
   const nav = createNavigation({
@@ -160,6 +161,7 @@ async function boot() {
   const results = createResultsModule(ctx);
   const expenses = createExpensesModule({ ...ctx, refreshResults: () => results.refreshResults() });
   const settings = createSettingsModule({ ...ctx, reloadAllData });
+  const stock = createStockModule(ctx);
 
   initDates();
   initShiftKm(ctx);
@@ -171,6 +173,8 @@ async function boot() {
     delivery.renderDeliveryList();
     delivery.updateDeliveryTotals();
     await settings.refreshSettingsLists();
+    stock.populateSelects();
+    stock.refreshAll();
     await today.refreshToday();
     await expenses.refreshExpenses();
     await results.refreshResults();
@@ -190,6 +194,7 @@ async function boot() {
     await withdraw.refreshWithdraw();
     await history.refreshHistory();
     await ctx.refreshShiftKmSummary();
+    stock.init();
   } catch (e) {
     alert(`Erreur init: ${e?.message || e}`);
   }

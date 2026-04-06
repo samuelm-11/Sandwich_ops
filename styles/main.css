@@ -52,4 +52,9 @@ tfoot td { font-weight:900; border-top: 2px solid #ddd; }
 .grid2 { display:grid; grid-template-columns: 1fr 1fr; gap:10px; }
 .grid3 { display:grid; grid-template-columns: 1fr 1fr 1fr; gap:10px; }
 .badgeOff { display:inline-block; padding:4px 8px; border-radius:999px; border:1px solid #ddd; font-size:12px; opacity:.7; }
+.badge { display:inline-block; padding:4px 8px; border-radius:999px; font-size:12px; font-weight:700; border:1px solid #ddd; margin-left:4px; }
+.badge-ok { background:#effaf2; border-color:#b7e5c0; color:#1d6b34; }
+.badge-warn { background:#fff8e7; border-color:#f1d99a; color:#7a5600; }
+.badge-danger { background:#fff1f1; border-color:#f0b0b0; color:#9b1a1a; }
+.badge-muted { background:#f5f5f5; border-color:#ddd; color:#555; }
 @media (max-width: 720px){ .grid2, .grid3 { grid-template-columns: 1fr; } }
